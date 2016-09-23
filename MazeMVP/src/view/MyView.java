@@ -103,7 +103,6 @@ public class MyView extends CommonView {
 	public void notifyMazeWasSolved(String name) {
 		out.println("Solution for " + name + " is ready");
 		out.flush();
-
 	}
 
 	/*

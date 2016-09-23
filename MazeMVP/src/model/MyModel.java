@@ -177,8 +177,7 @@ public class MyModel extends CommonModel {
 //		Thread thread = new Thread(solverRunnable);
 //		threadPool.submit(thread);
 		
-		threadPool.submit(new Callable<Solution>() {
-			@SuppressWarnings("rawtypes")
+		threadPool.submit(new Callable<Solution<Position>>() {
 			@Override
 			public Solution call() throws Exception {
 				MazeAdapter myMazeAdap = new MazeAdapter(getMaze(name));
@@ -186,7 +185,7 @@ public class MyModel extends CommonModel {
 				setSolution(name, sol);
 				
 				setChanged();
-				notifyObservers("Solution_Ready " + name);
+				notifyObservers(new String [] {"solution_ready" ,name});
 				return sol;
 			}
 		});	

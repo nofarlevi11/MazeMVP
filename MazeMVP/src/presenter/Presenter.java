@@ -1,6 +1,5 @@
 package presenter;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
@@ -69,8 +68,6 @@ public class Presenter implements Observer {
 				view.displayMessage(arguments);
 				break;
 			}
-
 		}
-		
 	}
 }
