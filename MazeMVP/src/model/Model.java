@@ -1,9 +1,13 @@
 package model;
 
+
 import algorithms.mazeGenerators.Maze3d;
+import algorithms.mazeGenerators.Maze3dGenerator;
+import algorithms.mazeGenerators.Maze3dGeneratorBase;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Seracher;
 import algorithms.search.Solution;
+import properties.Properties;
 
 
 // TODO: Auto-generated Javadoc
@@ -27,7 +31,7 @@ public interface Model {
 	 * @param rows the rows (y)
 	 * @param cols the cols (x)
 	 */
-	void generateMaze (String name, int floors, int rows, int cols);
+	void generateMaze(String name, int floors, int rows, int cols, Maze3dGenerator generateAlgo);
 	
 	/**
 	 * Gets the maze.
@@ -81,7 +85,9 @@ public interface Model {
 	 * @param name the name
 	 * @return the solution
 	 */
-	public Solution<Position> getSolution (String name);
+	 Solution<Position> getSolution (String name);
+
+	 Properties getProperties();
 	
 	/**
 	 * Checks if is good input.
@@ -91,5 +97,10 @@ public interface Model {
 	 * @return true, if equal
 	 */
 	//boolean isGoodInput(int numOfArgs, int inputArgs);
+	 
+	 void loadSolutions ();
+
+
+
 }
 

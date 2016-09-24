@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Observable;
+import java.util.Observer;
 
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
@@ -22,8 +23,18 @@ import presenter.Command;
  * @since September 2016
  */
 
-public class MyView extends CommonView {
+public class MyView extends Observable implements View, Observer {
 
+	/** The in. */
+	protected BufferedReader in;
+	
+	/** The out. */
+	protected PrintWriter out;
+	
+	/** The cli. */
+	protected CLI cli;
+	
+	
 	/**
 	 * Instantiates a new my view.
 	 *
@@ -31,7 +42,10 @@ public class MyView extends CommonView {
 	 * @param out
 	 */
 	public MyView(BufferedReader in, PrintWriter out) {
-		super(in, out);
+		this.in = in;
+		this.out=out;
+		cli = new CLI (in, out);
+		cli.addObserver(this); //adding the ciew to be an observer of the cli
 	}
 
 	/*

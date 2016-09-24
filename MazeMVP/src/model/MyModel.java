@@ -6,16 +6,32 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Observable;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+
 import algorithm.demo.MazeAdapter;
 import algorithms.mazeGenerators.GrowingTreeGenerator;
 import algorithms.mazeGenerators.Maze3d;
+import algorithms.mazeGenerators.Maze3dGenerator;
+import algorithms.mazeGenerators.Maze3dGeneratorBase;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Seracher;
 import algorithms.search.Solution;
 import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
+import properties.Properties;
+import properties.PropertiesLoader;
 
 /**
  * <h1>The Class MyModel.</h1>
@@ -28,125 +44,93 @@ import io.MyDecompressorInputStream;
  * @since September 2016
  */
 
-public class MyModel extends CommonModel {
+public class MyModel extends Observable implements Model {
 
+	/** The mazes. */
+	protected Map<String, Maze3d> mazes = new ConcurrentHashMap<String, Maze3d>(); // hash map for the mazes
+
+	/** The thread pool. */
+	protected ExecutorService threadPool;
+
+	/** The solutions. */
+	@SuppressWarnings("rawtypes")
+	protected Map<String, Solution> solutions = new ConcurrentHashMap<String, Solution>();
+
+	/** The open files. */
+	protected List<String> openFiles = new ArrayList<String>();
+	protected Properties properties;
+	
 	/**
 	 * Instantiates a new my model.
 	 */
 	public MyModel() {
-		super();
+		properties = PropertiesLoader.getInstance().getProperties();
+		threadPool = Executors.newFixedThreadPool(properties.getNumOfThreads());
+		this.loadSolutions();
+	}
+	
+	/**
+	 * Sets the mazes.
+	 *
+	 * @param mazes
+	 *            the mazes
+	 */
+	public void setMazes(Map<String, Maze3d> mazes) {
+		this.mazes = mazes;
 	}
 
 	/**
-	 * The Class GenerateMazeRunnable.
+	 * Gets the thread pool.
+	 *
+	 * @return the thread pool
 	 */
-	// class GenerateMazeRunnable implements Runnable {
-	//
-	// /** The dimension of the maze. */
-	// private int floors, rows, cols;
-	//
-	// /** The name. */
-	// private String name;
-	//
-	// /** The generator. */
-	// private GrowingTreeGenerator generator;
-	//
-	//
-	// /**
-	// * Instantiates a new generate maze runnable.
-	// *
-	// * @param name the name
-	// * @param floors the floors
-	// * @param rows the rows
-	// * @param cols the columns
-	// */
-	// public GenerateMazeRunnable(String name, int floors, int rows, int cols)
-	// {
-	// this.name = name;
-	// this.floors = floors;
-	// this.rows = rows;
-	// this.cols = cols;
-	// }
-	//
-	//
-	// @Override
-	// public void run() {
-	// GrowingTreeGenerator generator = new GrowingTreeGenerator();
-	// Maze3d maze = generator.generate(floors, rows, cols);
-	// mazes.put(name, maze);
-	//
-	// presenter.notifyMazeIsReady(name);
-	// }
-	//
-	// /**
-	// * Terminate.
-	// */
-	// public void terminate() {
-	// generator.setIsDone(true);
-	// }
-	// }
+	public ExecutorService getThreadPool() {
+		return threadPool;
+	}
 
-//	/**
-//	 * The Class MazeSolverRunnable.
-//	 */
-//	class MazeSolverRunnable implements Runnable {
-//
-//		/** The name. */
-//		private String name;
-//
-//		/** The algorithm. */
-//		private Seracher<Position> algorithm;
-//
-//		/**
-//		 * Instantiates a new maze solver runnable.
-//		 *
-//		 * @param name
-//		 *            the name
-//		 * @param algo
-//		 *            the algorithm
-//		 */
-//		public MazeSolverRunnable(String name, Seracher<Position> algo) {
-//			this.name = name;
-//			this.algorithm = algo;
-//		}
-//
-//		/*
-//		 * @see java.lang.Runnable#run()
-//		 */
-//		@Override
-//		public void run() {
-//			MazeAdapter myMazeAdap = new MazeAdapter(getMaze(name));
-//			Solution<Position> sol = algorithm.search(myMazeAdap);
-//			solutions.put(name, sol);
-//
-//			controller.notifyMazeWasSolved(name);
-//		}
-//
-//		/**
-//		 * Terminate.
-//		 */
-//		public void terminate() {
-//			algorithm.setIsDone(true);
-//		}
-//	}
+	/**
+	 * Sets the thread pool.
+	 *
+	 * @param threadPool
+	 *            the new thread pool
+	 */
+	public void setThreadPool(ExecutorService threadPool) {
+		this.threadPool = threadPool;
+	}
+
+	/*
+	 * @see model.Model#getMaze(java.lang.String)
+	 */
+	@Override
+	public Maze3d getMaze(String name) {
+		return mazes.get(name);
+	}
+
+	public Properties getProperties() {
+		return this.properties;
+
+	}
+	
+	/**
+	 * Gets the mazes.
+	 *
+	 * @return the mazes
+	 */
+	public Map<String, Maze3d> getMazes() {
+		return mazes;
+	}
 
 	/*
 	 * @see model.Model#generateMaze(java.lang.String, int, int, int)
 	 */
 	@Override
-	public void generateMaze(String name, int floors, int rows, int cols) {
-		// GenerateMazeRunnable generateMazeRunnable = new
-		// GenerateMazeRunnable(name, floors, rows, cols);
-		// generateMazeTasks.add(generateMazeRunnable);
-		// Thread thread = new Thread(generateMazeRunnable);
-		// threadPool.submit(thread);
+	public void generateMaze(String name, int floors, int rows, int cols, Maze3dGenerator generateAlgo) {
 
 		threadPool.submit(new Callable<Maze3d>() {
 
 			@Override
 			public Maze3d call() throws Exception {
-				GrowingTreeGenerator generator = new GrowingTreeGenerator();
-				Maze3d maze = generator.generate(floors, rows, cols);
+				Maze3d maze = generateAlgo.generate(floors, rows, cols);
 				mazes.put(name, maze);
 
 				setChanged();
@@ -172,10 +156,6 @@ public class MyModel extends CommonModel {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void solveMaze(String name, Seracher<Position> algorithm) {
-//		MazeSolverRunnable solverRunnable = new MazeSolverRunnable(name, algorithm);
-//		solverTasks.add(solverRunnable);
-//		Thread thread = new Thread(solverRunnable);
-//		threadPool.submit(thread);
 		
 		threadPool.submit(new Callable<Solution<Position>>() {
 			@Override
@@ -283,9 +263,10 @@ public class MyModel extends CommonModel {
 	 * @see model.Model#exit()
 	 */
 	public void exit() {
-
+		//saving the solution for the next run befor close
+		saveSolutions();
 		// terminate all of the Callable threads
-		threadPool.shutdown();
+		threadPool.shutdownNow();
 
 		// if there are open files,
 		if (!openFiles.isEmpty()) {
@@ -307,4 +288,51 @@ public class MyModel extends CommonModel {
 //		}
 //		return false;
 //	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void loadSolutions() {
+		File file = new File("solutions.dat");
+		if (!file.exists())
+			return;
+		
+		ObjectInputStream ois = null;
+		
+		try {
+			ois = new ObjectInputStream(new GZIPInputStream(new FileInputStream("solutions.dat")));
+			mazes = (Map<String, Maze3d>)ois.readObject();
+			solutions = (Map<String, Solution>)ois.readObject();		
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally{
+			try {
+				ois.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}		
+	}
+	
+	protected void saveSolutions() {
+		ObjectOutputStream oos = null;
+		try {
+		    oos = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream("solutions.dat")));
+			oos.writeObject(mazes);
+			oos.writeObject(solutions);			
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				oos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
