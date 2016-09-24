@@ -256,7 +256,7 @@ public class MyModel extends Observable implements Model {
 		setMaze(name, loadedMaze);
 		// notify the maze is ready
 		setChanged();
-		notifyObservers("Solution_Ready " + name);
+		notifyObservers(new String [] {"maze_ready" , name});
 	}
 
 	/*
