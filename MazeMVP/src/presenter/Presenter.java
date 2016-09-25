@@ -28,8 +28,9 @@ public class Presenter implements Observer {
 
 			String commandsArr[] = commandLine.split(" ");
 			String command = commandsArr[0];
-
-			if (!commands.containsKey(command)) {
+			if (command.equals("help"))
+				view.printHelp();
+			else if (!commands.containsKey(command)) {
 				view.displayMessage(new String[] { "Critical Error", "Command doesn't exist!" });
 			} else {
 				String[] arguments = null;

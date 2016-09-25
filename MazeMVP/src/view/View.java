@@ -87,4 +87,6 @@ public interface View {
 	void notifyBadInput();
 	
 	public void displayMessage(String[] msg);
+	public void printHelp();
+
 }

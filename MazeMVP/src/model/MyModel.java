@@ -21,10 +21,8 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import algorithm.demo.MazeAdapter;
-import algorithms.mazeGenerators.GrowingTreeGenerator;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Maze3dGenerator;
-import algorithms.mazeGenerators.Maze3dGeneratorBase;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Seracher;
 import algorithms.search.Solution;
@@ -47,19 +45,23 @@ import properties.PropertiesLoader;
 public class MyModel extends Observable implements Model {
 
 	/** The mazes. */
-	protected Map<String, Maze3d> mazes = new ConcurrentHashMap<String, Maze3d>(); // hash map for the mazes
+	protected Map<String, Maze3d> mazes = new ConcurrentHashMap<String, Maze3d>(); // hash
+																					// map
+																					// for
+																					// the
+																					// mazes
 
 	/** The thread pool. */
 	protected ExecutorService threadPool;
 
 	/** The solutions. */
 	@SuppressWarnings("rawtypes")
-	protected Map<String, Solution> solutions = new ConcurrentHashMap<String, Solution>();
+	protected Map<Maze3d, Solution> solutions = new ConcurrentHashMap<Maze3d, Solution>();
 
 	/** The open files. */
 	protected List<String> openFiles = new ArrayList<String>();
 	protected Properties properties;
-	
+
 	/**
 	 * Instantiates a new my model.
 	 */
@@ -68,7 +70,7 @@ public class MyModel extends Observable implements Model {
 		threadPool = Executors.newFixedThreadPool(properties.getNumOfThreads());
 		this.loadSolutions();
 	}
-	
+
 	/**
 	 * Sets the mazes.
 	 *
@@ -110,7 +112,7 @@ public class MyModel extends Observable implements Model {
 		return this.properties;
 
 	}
-	
+
 	/**
 	 * Gets the mazes.
 	 *
@@ -134,7 +136,7 @@ public class MyModel extends Observable implements Model {
 				mazes.put(name, maze);
 
 				setChanged();
-				notifyObservers(new String [] {"maze_ready" , name});
+				notifyObservers(new String[] { "maze_ready", name });
 				return maze;
 			}
 		});
@@ -153,22 +155,25 @@ public class MyModel extends Observable implements Model {
 	/*
 	 * @see model.Model#solveMaze(java.lang.String, algorithms.search.Seracher)
 	 */
-	@SuppressWarnings("rawtypes")
 	@Override
 	public void solveMaze(String name, Seracher<Position> algorithm) {
-		
+		if (solutions.containsKey(mazes.get(name))) {
+			setChanged();
+			notifyObservers(new String[] { "solution_ready", name });
+			return;
+		}
 		threadPool.submit(new Callable<Solution<Position>>() {
 			@Override
-			public Solution call() throws Exception {
+			public Solution<Position> call() throws Exception {
 				MazeAdapter myMazeAdap = new MazeAdapter(getMaze(name));
 				Solution<Position> sol = algorithm.search(myMazeAdap);
 				setSolution(name, sol);
-				
+
 				setChanged();
-				notifyObservers(new String [] {"solution_ready" ,name});
+				notifyObservers(new String[] { "solution_ready", name });
 				return sol;
 			}
-		});	
+		});
 	}
 
 	/*
@@ -176,11 +181,11 @@ public class MyModel extends Observable implements Model {
 	 */
 	@SuppressWarnings("unchecked")
 	public Solution<Position> getSolution(String name) {
-		return solutions.get(name);
+		return solutions.get(mazes.get(name));
 	}
-	
+
 	public void setSolution(String name, Solution<Position> sol) {
-		solutions.put(name, sol);
+		solutions.put(mazes.get(name), sol);
 	}
 
 	/*
@@ -256,14 +261,14 @@ public class MyModel extends Observable implements Model {
 		setMaze(name, loadedMaze);
 		// notify the maze is ready
 		setChanged();
-		notifyObservers(new String [] {"maze_ready" , name});
+		notifyObservers(new String[] { "maze_ready", name });
 	}
 
 	/*
 	 * @see model.Model#exit()
 	 */
 	public void exit() {
-		//saving the solution for the next run befor close
+		// saving the solution for the next run befor close
 		saveSolutions();
 		// terminate all of the Callable threads
 		threadPool.shutdownNow();
@@ -278,51 +283,51 @@ public class MyModel extends Observable implements Model {
 	/*
 	 * @see model.Model#isGoodInput(int, int)
 	 */
-//	@Override
-//	public boolean isGoodInput(int numOfArgs, int inputArgs) {
-//		if (numOfArgs == inputArgs)
-//			return true;
-//		else {
-//			controller.notifyBadInput(); // if the user hasn't entered the right
-//											// num of parameters
-//		}
-//		return false;
-//	}
-	
+	// @Override
+	// public boolean isGoodInput(int numOfArgs, int inputArgs) {
+	// if (numOfArgs == inputArgs)
+	// return true;
+	// else {
+	// controller.notifyBadInput(); // if the user hasn't entered the right
+	// // num of parameters
+	// }
+	// return false;
+	// }
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void loadSolutions() {
 		File file = new File("solutions.dat");
 		if (!file.exists())
 			return;
-		
+
 		ObjectInputStream ois = null;
-		
+
 		try {
 			ois = new ObjectInputStream(new GZIPInputStream(new FileInputStream("solutions.dat")));
-			mazes = (Map<String, Maze3d>)ois.readObject();
-			solutions = (Map<String, Solution>)ois.readObject();		
+			mazes = (Map<String, Maze3d>) ois.readObject();
+			solutions = (Map<Maze3d, Solution>) ois.readObject();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-		} finally{
+		} finally {
 			try {
 				ois.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}		
+		}
 	}
-	
+
 	protected void saveSolutions() {
 		ObjectOutputStream oos = null;
 		try {
-		    oos = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream("solutions.dat")));
+			oos = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream("solutions.dat")));
 			oos.writeObject(mazes);
-			oos.writeObject(solutions);			
-			
+			oos.writeObject(solutions);
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

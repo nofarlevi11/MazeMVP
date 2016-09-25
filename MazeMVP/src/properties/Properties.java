@@ -10,9 +10,8 @@ public class Properties implements Serializable {
 	private int numOfThreads;
 	private String generateMazeAlgorithm;
 	private String solveMazeAlgorithm;
-
+	
 	public Properties() {
-
 	}
 
 	public int getNumOfThreads() {
