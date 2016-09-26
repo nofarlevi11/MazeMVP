@@ -76,16 +76,10 @@ public interface View {
 	 */
 	void displaySolution(Solution<Position> sol);
 	
-	
-	/**
-	 * Notify program is about to end.
-	 */
-	void notifyProgramIsAboutToEnd();
+
 	/**
 	 * Notify bad input.
 	 */
-	void notifyBadInput();
-	
 	public void displayMessage(String[] msg);
 	public void printHelp();
 

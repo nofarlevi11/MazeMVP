@@ -283,16 +283,16 @@ public class MyModel extends Observable implements Model {
 	/*
 	 * @see model.Model#isGoodInput(int, int)
 	 */
-	// @Override
-	// public boolean isGoodInput(int numOfArgs, int inputArgs) {
-	// if (numOfArgs == inputArgs)
-	// return true;
-	// else {
-	// controller.notifyBadInput(); // if the user hasn't entered the right
-	// // num of parameters
-	// }
-	// return false;
-	// }
+	@Override
+	public boolean isGoodInput(int numOfArgs, int inputArgs) {
+		if (numOfArgs == inputArgs)
+			return true;
+		else {// if the user hasn't entered the right num of parameters
+			setChanged();
+			notifyObservers(new String [] {"error", "Input data is invalid or missing, try again"});
+		}
+		return false;
+	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void loadSolutions() {

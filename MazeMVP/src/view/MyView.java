@@ -131,18 +131,8 @@ public class MyView extends Observable implements View, Observer {
 	}
 
 	/*
-	 * @see view.View#notifyProgramIsAboutToEnd()
-	 */
-	@Override
-	public void notifyProgramIsAboutToEnd() {
-		out.println("Bye Bye :) ");
-		out.flush();
-	}
-
-	/*
 	 * @see view.View#notifyBadInput()
 	 */
-	@Override
 	public void notifyBadInput() {
 		out.println("OOPS, Your input has not the right num of parameters. please try again. for help, press help\n\n");
 	}
@@ -151,6 +141,7 @@ public class MyView extends Observable implements View, Observer {
 	public void displayMessage(String[] msg) {
 		for (String st : msg) {
 			out.println(st);
+			out.println();
 		}
 	}
 

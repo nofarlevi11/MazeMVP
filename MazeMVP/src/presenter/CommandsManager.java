@@ -73,13 +73,14 @@ public class CommandsManager {
 		public void doCommand(String[] args) {
 
 			// checking if the user entered the right num of parameter
-			/* if (model.isGoodInput(4, args.length)) { */
-			String name = args[0];
-			int floors = Integer.parseInt(args[1]);
-			int rows = Integer.parseInt(args[2]);
-			int cols = Integer.parseInt(args[3]);
-			model.generateMaze(name, floors, rows, cols, getGenerator(model.getProperties().getGenerateMazeAlgorithm()));
-			// }
+			if (model.isGoodInput(4, args.length)) {
+				String name = args[0];
+				int floors = Integer.parseInt(args[1]);
+				int rows = Integer.parseInt(args[2]);
+				int cols = Integer.parseInt(args[3]);
+				model.generateMaze(name, floors, rows, cols,
+						getGenerator(model.getProperties().getGenerateMazeAlgorithm()));
+			}
 		}
 	}
 
@@ -93,7 +94,7 @@ public class CommandsManager {
 		}
 		return generators.get(generator);
 	}
-	
+
 	public Seracher<Position> getAlgorithm(String algo) {
 		HashMap<String, CommonSearcher<Position>> commands = new HashMap<String, CommonSearcher<Position>>();
 		commands.put("BFS", new BFS<Position>());
@@ -114,11 +115,11 @@ public class CommandsManager {
 		public void doCommand(String[] args) {
 
 			// checking if the user entered the right num of parameter
-			/* if (model.isGoodInput(1, args.length)) { */
-			String name = args[0];
-			Maze3d maze = model.getMaze(name);
-			view.displayMaze(maze);
-			// }
+			if (model.isGoodInput(1, args.length)) {
+				String name = args[0];
+				Maze3d maze = model.getMaze(name);
+				view.displayMaze(maze);
+			}
 		}
 	}
 
@@ -135,24 +136,24 @@ public class CommandsManager {
 		public void doCommand(String[] args) {
 
 			// checking if the user entered the right num of parameter
-			/* if (model.isGoodInput(1, args.length)) { */
-			String paths = args[0];
-			File folderPath = null;
-			String[] filelist;
+			if (model.isGoodInput(1, args.length)) {
+				String paths = args[0];
+				File folderPath = null;
+				String[] filelist;
 
-			try {
-				// create new file
-				folderPath = new File(paths);
+				try {
+					// create new file
+					folderPath = new File(paths);
 
-				// array of files and directory
-				filelist = folderPath.list();
+					// array of files and directory
+					filelist = folderPath.list();
 
-				view.printAnswers(filelist);
-			} catch (Exception e) {
-				// if any error occurs
-				e.printStackTrace();
+					view.printAnswers(filelist);
+				} catch (Exception e) {
+					// if any error occurs
+					e.printStackTrace();
+				}
 			}
-			// }
 		}
 	}
 
@@ -169,24 +170,24 @@ public class CommandsManager {
 		public void doCommand(String[] args) {
 
 			// checking if the user entered the right num of parameter
-			/* if (model.isGoodInput(3, args.length)) { */
-			String name = args[0];
-			String cross = args[1].toLowerCase(); // the dimension
-			String index = args[2];
-			Maze3d maze = model.getMaze(name);
-			switch (cross) { // checking what dimension the cross will be
-			case "z":
-				view.printCrossSection(maze.getCrossSectionByZ(Integer.parseInt(index)));
-				break;
-			case "y":
-				view.printCrossSection(maze.getCrossSectionByY(Integer.parseInt(index)));
-				break;
-			case "x":
-				view.printCrossSection(maze.getCrossSectionByX(Integer.parseInt(index)));
-				break;
-			default:
-				break;
-			// }
+			if (model.isGoodInput(3, args.length)) {
+				String name = args[0];
+				String cross = args[1].toLowerCase(); // the dimension
+				String index = args[2];
+				Maze3d maze = model.getMaze(name);
+				switch (cross) { // checking what dimension the cross will be
+				case "z":
+					view.printCrossSection(maze.getCrossSectionByZ(Integer.parseInt(index)));
+					break;
+				case "y":
+					view.printCrossSection(maze.getCrossSectionByY(Integer.parseInt(index)));
+					break;
+				case "x":
+					view.printCrossSection(maze.getCrossSectionByX(Integer.parseInt(index)));
+					break;
+				default:
+					break;
+				}
 
 			}
 		}
@@ -205,11 +206,11 @@ public class CommandsManager {
 		public void doCommand(String[] args) {
 
 			// checking if the user entered the right num of parameter
-			/* if (model.isGoodInput(2, args.length)) { */
-			String name = args[0];
-			String path = args[1];
-			model.saveMaze(name, path);
-			// }
+			if (model.isGoodInput(2, args.length)) {
+				String name = args[0];
+				String path = args[1];
+				model.saveMaze(name, path);
+			}
 		}
 	}
 
@@ -226,11 +227,11 @@ public class CommandsManager {
 		public void doCommand(String[] args) {
 
 			// checking if the user entered the right num of parameter
-			/* if (model.isGoodInput(2, args.length)) { */
-			String path = args[0];
-			String name = args[1];
-			model.loadMaze(path, name);
-			// }
+			if (model.isGoodInput(2, args.length)) {
+				String path = args[0];
+				String name = args[1];
+				model.loadMaze(path, name);
+			}
 		};
 	}
 
@@ -246,12 +247,12 @@ public class CommandsManager {
 		@Override
 		public void doCommand(String[] args) {
 			// checking if the user entered the right num of parameter
-			/* if (model.isGoodInput(1, args.length)) { */
-			String name = args[0];
-			Seracher algo = getAlgorithm(model.getProperties().getSolveMazeAlgorithm());
-			
-			model.solveMaze(name, algo);
-			// }
+			if (model.isGoodInput(1, args.length)) {
+				String name = args[0];
+				Seracher algo = getAlgorithm(model.getProperties().getSolveMazeAlgorithm());
+
+				model.solveMaze(name, algo);
+			}
 		}
 	}
 
@@ -267,18 +268,18 @@ public class CommandsManager {
 		@Override
 		public void doCommand(String[] args) {
 			// checking if the user entered the right num of parameter
-			/* if (model.isGoodInput(1, args.length)) { */
+			if (model.isGoodInput(1, args.length)) {
 
-			String name = args[0];
-			// bring the solution of the maze (according to the name) from
-			// the
-			// model, to sent to the view
-			Solution<Position> sol = model.getSolution(name);
+				String name = args[0];
+				// bring the solution of the maze (according to the name) from
+				// the
+				// model, to sent to the view
+				Solution<Position> sol = model.getSolution(name);
 
-			// send the solution to the view, so it could be displayed for
-			// the end-user
-			view.displaySolution(sol);
-			// }
+				// send the solution to the view, so it could be displayed for
+				// the end-user
+				view.displaySolution(sol);
+			}
 		}
 
 	}
@@ -293,7 +294,6 @@ public class CommandsManager {
 		 */
 		@Override
 		public void doCommand(String[] s) {
-			view.notifyProgramIsAboutToEnd();
 			model.exit();
 		}
 

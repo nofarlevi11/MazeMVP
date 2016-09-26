@@ -95,7 +95,7 @@ public interface Model {
 	 * @param inputArgs the input args
 	 * @return true, if equal
 	 */
-	//boolean isGoodInput(int numOfArgs, int inputArgs);
+	boolean isGoodInput(int numOfArgs, int inputArgs);
 	 
 	 void loadSolutions ();
 
