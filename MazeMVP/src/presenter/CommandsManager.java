@@ -249,7 +249,7 @@ public class CommandsManager {
 			// checking if the user entered the right num of parameter
 			if (model.isGoodInput(1, args.length)) {
 				String name = args[0];
-				Seracher algo = getAlgorithm(model.getProperties().getSolveMazeAlgorithm());
+				Seracher<Position> algo = getAlgorithm(model.getProperties().getSolveMazeAlgorithm());
 
 				model.solveMaze(name, algo);
 			}

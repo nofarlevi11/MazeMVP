@@ -1,6 +1,8 @@
 package view;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -8,11 +10,15 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Shell;
 
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
+import algorithms.search.Solution;
 
 
 public class MazeDisplay extends Canvas {
@@ -20,12 +26,13 @@ public class MazeDisplay extends Canvas {
 	private int[][] mazeDataDisplay;
 	private Maze3d maze;
 	private Character character;
-	private SpecificPoint startPoint = new SpecificPoint("start.jpg");
-	private SpecificPoint goalPoint = new SpecificPoint("goal.jpg");
-	private SpecificPoint floorAbove = new SpecificPoint("up.jpg");
-	private SpecificPoint floorBelow = new SpecificPoint("down.jpg");
-	private SpecificPoint wallPoint = new SpecificPoint("wall.jpg");
+	private SpecificPoint startPoint = new SpecificPoint("start.png");
+	private SpecificPoint goalPoint = new SpecificPoint("goal.png");
+	private SpecificPoint floorAbove = new SpecificPoint("up.png");
+	private SpecificPoint floorBelow = new SpecificPoint("down.png");
+	private SpecificPoint wallPoint = new SpecificPoint("wall.png");
 
+	
 	public void setMazeData(int[][] mazeData) {
 		this.mazeDataDisplay = mazeData;
 		this.redraw();
@@ -93,13 +100,26 @@ public class MazeDisplay extends Canvas {
 			}
 
 		});
+//		if (character.getPosition() == maze.getGoalPosition()){
+//			ImageData imgData = new ImageData("Party.jpg");
+//			Image image = new Image (null, imgData);
+//			GC gc = new GC(this);
+//			gc.drawImage(image, 0, 0);
+//			
+		//}
+		
+		
 		this.addPaintListener(new PaintListener() {
 
 			@Override
 			public void paintControl(PaintEvent e) {
-				if (mazeDataDisplay == null)
+				if (mazeDataDisplay == null){
+					Image imgBack =new Image(null, "lib/images/background.png");
+					e.gc.drawImage(imgBack, 0, 0, imgBack.getBounds().width, imgBack.getBounds().height, 0,0,
+							getSize().x, getSize().y);
+				
 					return;
-
+				}
 				e.gc.setForeground(new Color(null, 0, 0, 0));
 				e.gc.setBackground(new Color(null, 0, 0, 0));
 
@@ -124,11 +144,9 @@ public class MazeDisplay extends Canvas {
 							} else if (moves.contains(new Position(character.getPosition().z - 1, i, j))) {// down
 								floorBelow.draw(w, h, e.gc, (new Position(character.getPosition().z-1, i, j)));
 							}
-
 						}
-
 					}
-				// drawing the start and goal positions
+				//drawing the start and goal positions
 				if (character.getPosition().z == maze.getStartPosition().z) {
 					startPoint.draw(w, h, e.gc, maze.getStartPosition());
 				}
@@ -151,38 +169,72 @@ public class MazeDisplay extends Canvas {
 		this.maze = maze;
 		this.redraw();
 	}
-}
-//	public void printSolution(Solution<Position> sol) {
 
-	// {
+	public void printSolution(Solution<Position> sol) {
+
+	 {
+			TimerTask task = new TimerTask() {
+				int i=0;
+				@Override
+				public void run() {
+					getDisplay().syncExec(new Runnable() {					
+
+						@Override
+						public void run() {
+							
+							if (i==sol.getStates().size()){
+								cancel();
+								return;
+								//TODO: fix this line
+							}
+								
+							character.setPosition(sol.getStates().get(i++).getValue());
+							setMazeData(maze.getCrossSectionByZ(character.getPosition().z));
+							redraw();
+						}
+					});
+					
+				}
+			};
+			Timer timer = new Timer();
+			timer.scheduleAtFixedRate(task, 0, 500);
 			
-//			System.out.println(sol);
-//			TimerTask task = new TimerTask() {
-//				int i=0;
-//				@Override
-//				public void run() {	
-//					getDisplay().syncExec(new Runnable() {					
-//
-//						@Override
-//						public void run() {
-//							
-//							if (i==sol.getSolution().size()){
-//								return;
-//								//TODO: fix this line
-//							}
-//								
-//							character.setPos(sol.getSolution().get(i++).getState());
-//							setMazeData(maze.getCrossSectionByZ(character.getPosition().z));
-//							redraw();
-//						}
-//					});
-//					
-//				}
-////			};
-//			Timer timer = new Timer();
-//			timer.scheduleAtFixedRate(task, 0, 500);
-//			
-//		}
-//		
-//	}
+		}
+		
+	}
+	public void printHint(Solution<Position> sol) {
 
+		 {
+				TimerTask task = new TimerTask() {
+					int i=0;
+					@Override
+					public void run() {
+						getDisplay().syncExec(new Runnable() {					
+
+							@Override
+							public void run() {
+								
+								if (i==4){
+									cancel();
+									return;
+									//TODO: fix this line
+								}
+									
+								character.setPosition(sol.getStates().get(i++).getValue());
+								setMazeData(maze.getCrossSectionByZ(character.getPosition().z));
+								redraw();
+							}
+							
+						});
+						
+					}
+				};
+				
+				Timer timer = new Timer();
+				timer.scheduleAtFixedRate(task, 0, 500);
+				
+			}
+		 
+		}
+
+}

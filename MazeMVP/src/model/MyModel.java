@@ -196,7 +196,7 @@ public class MyModel extends Observable implements Model {
 		Maze3d maze = getMaze(name);
 		OutputStream out = null;
 		try {
-			out = new MyCompressorOutputStream(new FileOutputStream(path));
+			out = new MyCompressorOutputStream(new FileOutputStream("lib/mazes/" + path));
 			openFiles.add("compressor"); // insert some String to a list, to
 											// monitor which Files are open..
 		} catch (FileNotFoundException e) {
@@ -231,7 +231,8 @@ public class MyModel extends Observable implements Model {
 		try {
 			// file instance needed so we could know the size of the maze we
 			// are going to load
-			fileIns = new File(path);
+			String myFile = "lib/mazes/" + path;
+			fileIns = new File(myFile);
 			openFiles.add("fileIns"); // insert some String to a list, to
 										// monitor which Files are open..
 			in = new MyDecompressorInputStream(new FileInputStream(fileIns));
