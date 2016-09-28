@@ -10,9 +10,9 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.internal.Callback;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Shell;
 
@@ -26,11 +26,12 @@ public class MazeDisplay extends Canvas {
 	private int[][] mazeDataDisplay;
 	private Maze3d maze;
 	private Character character;
-	private SpecificPoint startPoint = new SpecificPoint("start.png");
+	//private SpecificPoint startPoint = new SpecificPoint("start.png");
 	private SpecificPoint goalPoint = new SpecificPoint("goal.png");
 	private SpecificPoint floorAbove = new SpecificPoint("up.png");
 	private SpecificPoint floorBelow = new SpecificPoint("down.png");
 	private SpecificPoint wallPoint = new SpecificPoint("wall.png");
+	boolean win = false;
 
 	
 	public void setMazeData(int[][] mazeData) {
@@ -114,7 +115,7 @@ public class MazeDisplay extends Canvas {
 			@Override
 			public void paintControl(PaintEvent e) {
 				if (mazeDataDisplay == null){
-					Image imgBack =new Image(null, "lib/images/background.png");
+					Image imgBack =new Image(null, "lib/images/minions_bg.png");
 					e.gc.drawImage(imgBack, 0, 0, imgBack.getBounds().width, imgBack.getBounds().height, 0,0,
 							getSize().x, getSize().y);
 				
@@ -147,15 +148,33 @@ public class MazeDisplay extends Canvas {
 						}
 					}
 				//drawing the start and goal positions
-				if (character.getPosition().z == maze.getStartPosition().z) {
-					startPoint.draw(w, h, e.gc, maze.getStartPosition());
-				}
+//				if (character.getPosition().z == maze.getStartPosition().z) {
+//					startPoint.draw(w, h, e.gc, maze.getStartPosition());
+//				}
 
 				if (character.getPosition().z == maze.getGoalPosition().z) {
 					goalPoint.draw(w, h, e.gc, maze.getGoalPosition());
 				}
 				character.draw(w, h, e.gc);
-
+				
+				
+				if (character.getPosition().equals(maze.getGoalPosition()) && !win){
+					Shell shell = new Shell();
+					shell.setSize(400,400);
+					Canvas hagiga =new Canvas(shell, SWT.FILL);
+					shell.addPaintListener(new PaintListener() {
+						
+						@Override
+						public void paintControl(PaintEvent e	) {
+							Image imgBack=new Image(null, "lib/images/endParty.png");
+							e.gc.drawImage(imgBack,0, 0, imgBack.getBounds().width, imgBack.getBounds().height, 0,0,
+									shell.getSize().x, shell.getSize().y);
+							win = true;
+						}
+					});
+					shell.setSize(600,400);
+					shell.open();
+				}
 			}
 		});
 

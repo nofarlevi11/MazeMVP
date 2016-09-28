@@ -1,6 +1,6 @@
 package view;
 
-import java.awt.Font;
+
 import java.io.File;
 import java.util.HashMap;
 
@@ -10,7 +10,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -53,18 +52,12 @@ public class MazeWindow extends BasicWindow implements View {
 		RowLayout rowLayout = new RowLayout(SWT.FILL);
 		rowLayout.pack = false;
 		btnGroup.setLayout(rowLayout);
-
-//		FillLayout fillLayout = new FillLayout();
-//		fillLayout.type = SWT.VERTICAL;
-//		btnGroup.setLayout(fillLayout);
 		
 		Button btnGenerateMaze = new Button(btnGroup, SWT.PUSH );
 		btnGenerateMaze.setText("Generate maze");
 
 		btnGenerateMaze.setBackground(new Color (null,255,165,0));
 		btnGenerateMaze.setImage(eye);
-
-		
 
 		btnGenerateMaze.addSelectionListener(new SelectionListener() {
 
@@ -100,7 +93,7 @@ public class MazeWindow extends BasicWindow implements View {
 		});
 
 		Button btnDisplayHint = new Button(btnGroup, SWT.PUSH);
-		btnDisplayHint.setText("Get Hint!");
+		btnDisplayHint.setText("       Get Hint!");
 		btnDisplayHint.setBackground(new Color (null,255,140,0));
 		btnDisplayHint.setImage(eye);
 		btnDisplayHint.addSelectionListener(new SelectionListener() {
@@ -315,7 +308,6 @@ public class MazeWindow extends BasicWindow implements View {
 		int[][] mazeData = maze.getCrossSectionByZ(maze.getStartPosition().z);
 		mazeDisplay.setCharacterPosition(maze.getStartPosition());
 		mazeDisplay.setMazeData(mazeData);
-		mazeDisplay.forceFocus();
 	}
 
 	@Override
