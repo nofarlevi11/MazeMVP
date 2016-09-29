@@ -1,6 +1,7 @@
 package view;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Observable;
@@ -27,14 +28,13 @@ public class MyView extends Observable implements View, Observer {
 
 	/** The in. */
 	protected BufferedReader in;
-	
+
 	/** The out. */
 	protected PrintWriter out;
-	
+
 	/** The cli. */
 	protected CLI cli;
-	
-	
+
 	/**
 	 * Instantiates a new my view.
 	 *
@@ -43,9 +43,9 @@ public class MyView extends Observable implements View, Observer {
 	 */
 	public MyView(BufferedReader in, PrintWriter out) {
 		this.in = in;
-		this.out=out;
-		cli = new CLI (in, out);
-		cli.addObserver(this); //adding the ciew to be an observer of the cli
+		this.out = out;
+		cli = new CLI(in, out);
+		cli.addObserver(this); // adding the ciew to be an observer of the cli
 	}
 
 	/*
@@ -130,6 +130,7 @@ public class MyView extends Observable implements View, Observer {
 		out.flush();
 	}
 
+
 	/*
 	 * @see view.View#notifyBadInput()
 	 */
@@ -152,7 +153,7 @@ public class MyView extends Observable implements View, Observer {
 			notifyObservers(arg);
 		}
 	}
-	
+
 	/**
 	 * Prints the help.
 	 */
@@ -180,4 +181,5 @@ public class MyView extends Observable implements View, Observer {
 				+ "*  exit : this command will exit the program properly \n\n"
 				+ "\t\t FOR EXAMPLE:   generate_maze Nofar 5 5 5\n\n");
 	}
+
 }

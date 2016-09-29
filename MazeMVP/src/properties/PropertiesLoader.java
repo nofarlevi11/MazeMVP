@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 
 public class PropertiesLoader {
 	private static PropertiesLoader instance;
-	private Properties properties;
+	private static Properties properties;
 
 	private PropertiesLoader() {
 		try {
@@ -19,7 +19,7 @@ public class PropertiesLoader {
 		}
 	}
 
-	public Properties getProperties() {
+	public static Properties getProperties() {
 		return properties;
 	}
 
@@ -27,6 +27,16 @@ public class PropertiesLoader {
 		if (instance == null)
 			instance = new PropertiesLoader();
 		return instance;
+	}
+
+	public static void loadXML(String file) {
+		try {
+			XMLDecoder decoder = new XMLDecoder(new FileInputStream(file));
+			properties = (Properties) decoder.readObject();
+			decoder.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

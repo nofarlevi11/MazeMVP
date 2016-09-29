@@ -55,6 +55,7 @@ public class CommandsManager {
 		commands.put("load_maze", new LoadMazeCommand());
 		commands.put("solve_maze", new SolveMazeCommand());
 		commands.put("display_solution", new DisplaySolutionCommand());
+		commands.put("load_XML", new loadPropXMLCommand());
 		commands.put("exit", new exit());
 		return commands;
 	}
@@ -284,6 +285,21 @@ public class CommandsManager {
 
 	}
 
+	public class loadPropXMLCommand implements Command {
+
+		@Override
+		public void doCommand(String[] args) {
+			if (model.isGoodInput(1, args.length)) {
+				String file = args[0];
+				PropertiesLoader.loadXML(file);
+				model.setProperties(PropertiesLoader.getProperties());
+			}
+
+		}
+
+	}
+	
+	
 	/**
 	 * The Class exit.
 	 */

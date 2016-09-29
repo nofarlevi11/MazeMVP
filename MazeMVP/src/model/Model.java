@@ -97,8 +97,9 @@ public interface Model {
 	 */
 	boolean isGoodInput(int numOfArgs, int inputArgs);
 	 
-	 void loadSolutions ();
+	void loadSolutions ();
 
+	void setProperties(Properties prop);
 
 
 }

@@ -80,7 +80,9 @@ public interface View {
 	/**
 	 * Notify bad input.
 	 */
-	public void displayMessage(String[] msg);
-	public void printHelp();
+	void displayMessage(String[] msg);
+	void printHelp();
+	
+
 
 }

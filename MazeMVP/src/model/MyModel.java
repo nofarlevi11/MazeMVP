@@ -110,7 +110,11 @@ public class MyModel extends Observable implements Model {
 
 	public Properties getProperties() {
 		return this.properties;
-
+	}
+	
+	@Override
+	public void setProperties(Properties prop) {
+		this.properties=prop;
 	}
 
 	/**
@@ -284,6 +288,7 @@ public class MyModel extends Observable implements Model {
 	/*
 	 * @see model.Model#isGoodInput(int, int)
 	 */
+	
 	@Override
 	public boolean isGoodInput(int numOfArgs, int inputArgs) {
 		if (numOfArgs == inputArgs)
@@ -341,4 +346,7 @@ public class MyModel extends Observable implements Model {
 			}
 		}
 	}
+
+
+
 }

@@ -1,6 +1,5 @@
 package view;
 
-
 import java.io.File;
 import java.util.HashMap;
 
@@ -31,13 +30,17 @@ public class MazeWindow extends BasicWindow implements View {
 	private MazeDisplay mazeDisplay;
 	String mazeName;
 	boolean solveCmdWasSelected = false;
+	MenuBar myMenuBar;
 
 	@Override
 	protected void initWidgets() {
+
 		GridLayout gridLayout = new GridLayout(2, false);
 		shell.setLayout(gridLayout);
 		shell.setText("Nofar's Maze3d Game");
-		shell.setBackground(new Color(null, 47,79,79));
+		shell.setBackground(new Color(null, 47, 79, 79));
+
+		shell.setImage(new Image(null, (new ImageData("lib/images/icon.ico"))));
 
 		ImageData imgd = new ImageData("lib/images/Capture.PNG");
 		Image eye = new Image(null, imgd);
@@ -47,22 +50,23 @@ public class MazeWindow extends BasicWindow implements View {
 		Image save = new Image(null, imgd3);
 		ImageData imgd4 = new ImageData("lib/images/load.PNG");
 		Image load = new Image(null, imgd4);
-		
+
 		Composite btnGroup = new Composite(shell, SWT.FILL);
 		RowLayout rowLayout = new RowLayout(SWT.FILL);
 		rowLayout.pack = false;
 		btnGroup.setLayout(rowLayout);
-		
-		Button btnGenerateMaze = new Button(btnGroup, SWT.PUSH );
+
+		Button btnGenerateMaze = new Button(btnGroup, SWT.PUSH);
 		btnGenerateMaze.setText("Generate maze");
 
-		btnGenerateMaze.setBackground(new Color (null,255,165,0));
+		btnGenerateMaze.setBackground(new Color(null, 255, 165, 0));
 		btnGenerateMaze.setImage(eye);
 
 		btnGenerateMaze.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				mazeDisplay.win = false;
 				showGenerateMazeOptions();
 			}
 
@@ -73,7 +77,7 @@ public class MazeWindow extends BasicWindow implements View {
 
 		Button btnSolveMaze = new Button(btnGroup, SWT.PUSH);
 		btnSolveMaze.setText("Solve maze");
-		btnSolveMaze.setBackground(new Color (null,255,215,0));
+		btnSolveMaze.setBackground(new Color(null, 255, 215, 0));
 		btnSolveMaze.setImage(eye2);
 		btnSolveMaze.addSelectionListener(new SelectionListener() {
 
@@ -94,7 +98,7 @@ public class MazeWindow extends BasicWindow implements View {
 
 		Button btnDisplayHint = new Button(btnGroup, SWT.PUSH);
 		btnDisplayHint.setText("       Get Hint!");
-		btnDisplayHint.setBackground(new Color (null,255,140,0));
+		btnDisplayHint.setBackground(new Color(null, 255, 140, 0));
 		btnDisplayHint.setImage(eye);
 		btnDisplayHint.addSelectionListener(new SelectionListener() {
 
@@ -110,23 +114,18 @@ public class MazeWindow extends BasicWindow implements View {
 			}
 		});
 
-
-
 		mazeDisplay = new MazeDisplay(this.shell, SWT.DOUBLE_BUFFERED);
 		mazeDisplay.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		mazeDisplay.setFocus();
-		
-		
+
 		Composite btnSaveLoadGroup = new Composite(shell, SWT.FILL);
 		RowLayout rowLayout2 = new RowLayout(SWT.CENTER);
 		rowLayout2.pack = false;
 		btnSaveLoadGroup.setLayout(rowLayout2);
 
-
-		
 		Button btnSaveMaze = new Button(btnSaveLoadGroup, SWT.PUSH);
 		btnSaveMaze.setText("Save Maze");
-		btnSaveMaze.setBackground(new Color (null,218,165,32));
+		btnSaveMaze.setBackground(new Color(null, 218, 165, 32));
 		btnSaveMaze.setImage(save);
 		btnSaveMaze.addSelectionListener(new SelectionListener() {
 
@@ -143,7 +142,7 @@ public class MazeWindow extends BasicWindow implements View {
 
 		Button btnLoadMaze = new Button(btnSaveLoadGroup, SWT.PUSH);
 		btnLoadMaze.setText("Load Maze");
-		btnLoadMaze.setBackground(new Color (null,128,128,0));
+		btnLoadMaze.setBackground(new Color(null, 128, 128, 0));
 		btnLoadMaze.setImage(load);
 		btnLoadMaze.addSelectionListener(new SelectionListener() {
 
@@ -157,11 +156,32 @@ public class MazeWindow extends BasicWindow implements View {
 
 			}
 		});
-		
-		
-		Button btnExit = new Button (btnSaveLoadGroup, SWT.PUSH);
+
+		Button btnExit = new Button(btnSaveLoadGroup, SWT.PUSH);
 		btnExit.setText("Exit");
-		
+		btnExit.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				if (isSure()) {
+					setChanged();
+					notifyObservers("exit");
+				}
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		addMenuBar();
+	}
+
+	private void addMenuBar() {
+		myMenuBar = new MenuBar(shell, SWT.NONE);
+		myMenuBar.createMenuBar();
 	}
 
 	protected void showGenerateMazeOptions() {
@@ -232,11 +252,11 @@ public class MazeWindow extends BasicWindow implements View {
 			}
 		}
 		if (done) {
-//			System.out.println(fileName);
-//			System.out.println(fd.getFileName());
+			// System.out.println(fileName);
+			// System.out.println(fd.getFileName());
 			setChanged();
 			notifyObservers("save_maze " + mazeName + " " + fd.getFileName());
-			displayMessage(new String [] {"Your maze was saved successfully"});
+			displayMessage(new String[] { "Your maze was saved successfully" });
 		}
 	}
 
@@ -260,24 +280,24 @@ public class MazeWindow extends BasicWindow implements View {
 			Label lblName = new Label(shell, SWT.NONE);
 			lblName.setText("Maze Name: ");
 			Text txtName = new Text(shell, SWT.BORDER);
-			
+
 			Button btnLoad = new Button(shell, SWT.PUSH);
 			btnLoad.setText("Load");
 			btnLoad.addSelectionListener(new SelectionListener() {
-				
+
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
-					if (txtName != null){
+					if (txtName != null) {
 						setChanged();
 						notifyObservers("load_maze " + fd.getFileName() + " " + txtName.getText());
 						shell.close();
 					}
 				}
-				
+
 				@Override
 				public void widgetDefaultSelected(SelectionEvent arg0) {
 					// TODO Auto-generated method stub
-					
+
 				}
 			});
 			shell.open();
@@ -335,7 +355,6 @@ public class MazeWindow extends BasicWindow implements View {
 	@Override
 	public void printCrossSection(int[][] maze2d) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -384,4 +403,14 @@ public class MazeWindow extends BasicWindow implements View {
 
 		massageBox.open();
 	}
+
+	protected boolean isSure() {
+		MessageBox msg = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+		msg.setMessage("Are you sure? you're gonna leave the party :(");
+		int ans = msg.open();
+		if (ans == 64)
+			return true;
+		return false;
+	}
+
 }
