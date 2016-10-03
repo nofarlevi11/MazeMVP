@@ -101,6 +101,8 @@ public interface Model {
 
 	void setProperties(Properties prop);
 
+	void showProperties();
+
 
 }
 

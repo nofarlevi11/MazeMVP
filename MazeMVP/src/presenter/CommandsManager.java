@@ -2,12 +2,10 @@ package presenter;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Properties;
 
 import algorithms.mazeGenerators.GrowingTreeGenerator;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Maze3dGenerator;
-import algorithms.mazeGenerators.Maze3dGeneratorBase;
 import algorithms.mazeGenerators.Position;
 import algorithms.mazeGenerators.SimpleMaze3dGenerator;
 import algorithms.search.BFS;
@@ -55,8 +53,10 @@ public class CommandsManager {
 		commands.put("load_maze", new LoadMazeCommand());
 		commands.put("solve_maze", new SolveMazeCommand());
 		commands.put("display_solution", new DisplaySolutionCommand());
-		commands.put("load_XML", new loadPropXMLCommand());
+		commands.put("load_XML", new LoadPropXMLCommand());
+		commands.put("show_properties", new ShowPropertiesCommand());
 		commands.put("exit", new exit());
+		
 		return commands;
 	}
 
@@ -285,7 +285,7 @@ public class CommandsManager {
 
 	}
 
-	public class loadPropXMLCommand implements Command {
+	public class LoadPropXMLCommand implements Command {
 
 		@Override
 		public void doCommand(String[] args) {
@@ -297,6 +297,13 @@ public class CommandsManager {
 
 		}
 
+	}
+	public class ShowPropertiesCommand implements Command {
+
+		@Override
+		public void doCommand(String[] args) {
+			model.showProperties();
+		}
 	}
 	
 	

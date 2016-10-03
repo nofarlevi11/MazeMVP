@@ -1,7 +1,6 @@
 package view;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Observable;
@@ -180,6 +179,18 @@ public class MyView extends Observable implements View, Observer {
 				+ "\t Enter the name of the command, and provide: the path \n"
 				+ "*  exit : this command will exit the program properly \n\n"
 				+ "\t\t FOR EXAMPLE:   generate_maze Nofar 5 5 5\n\n");
+	}
+
+	@Override
+	public void notifyLoadingSuccessfully() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void showProperties(String[] arguments) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

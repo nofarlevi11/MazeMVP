@@ -83,14 +83,14 @@ public class MazeDisplay extends Canvas {
 					break;
 				case SWT.PAGE_UP:
 					if (moves.contains(new Position(pos.z + 1, pos.y, pos.x))) {
-						mazeDataDisplay = maze.getCrossSectionByZ(pos.z + 1);
+						mazeDataDisplay = maze.getCrossSectionByZ(pos.z + 2);
 						character.moveUp();
 						redraw();
 					}
 					break;
 				case SWT.PAGE_DOWN:
 					if (moves.contains(new Position(pos.z - 1, pos.y, pos.x))) {
-						mazeDataDisplay = maze.getCrossSectionByZ(pos.z - 1);
+						mazeDataDisplay = maze.getCrossSectionByZ(pos.z - 2);
 						character.moveDown();
 						redraw();
 					}

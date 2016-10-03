@@ -44,10 +44,14 @@ public class Character {
 
 	public void moveUp() {
 		position.z++;
+		position.z++;
+
 	}
 
 	public void moveDown() {
 		position.z--;
+		position.z--;
+
 	}
 
 	public void moveForeword() {

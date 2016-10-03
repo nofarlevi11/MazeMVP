@@ -49,9 +49,10 @@ public class MenuBar extends MazeWindow {
 
 				propLoadFileDialog.open();
 				setChanged();
+				System.out.println("load_XML " + propLoadFileDialog.getFilterPath() + "\\" + propLoadFileDialog.getFileName());
 				notifyObservers(
 						"load_XML " + propLoadFileDialog.getFilterPath() + "\\" + propLoadFileDialog.getFileName());
-				notifyLodingSuccess();
+				notifyLoadingSuccess();
 			}
 
 			@Override
@@ -68,8 +69,10 @@ public class MenuBar extends MazeWindow {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				setChanged();
-				notifyObservers("exit");
+				if (isSure()) {
+					exitProgram();
+
+				}
 			}
 
 			@Override
@@ -81,12 +84,21 @@ public class MenuBar extends MazeWindow {
 
 	}
 
-	private void notifyLodingSuccess() {
+	private void notifyLoadingSuccess() {
 
 		MessageBox msg = new MessageBox(shell);
 		msg.setMessage("The Properties file was loaded successfully");
 		msg.open();
 
+	}
+	
+	private boolean isSure() {
+		MessageBox msg = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+		msg.setMessage("Are you sure? you're gonna leave the party :(");
+		int ans = msg.open();
+		if (ans == 64)
+			return true;
+		return false;
 	}
 
 }

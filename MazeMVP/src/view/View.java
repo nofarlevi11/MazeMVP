@@ -1,6 +1,7 @@
 package view;
 
 import java.util.HashMap;
+import java.util.Observer;
 
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
@@ -82,7 +83,11 @@ public interface View {
 	 */
 	void displayMessage(String[] msg);
 	void printHelp();
+
+	void addObserver(Observer observer);
+
+	void notifyLoadingSuccessfully();
+
+	void showProperties(String[] arguments);
 	
-
-
 }

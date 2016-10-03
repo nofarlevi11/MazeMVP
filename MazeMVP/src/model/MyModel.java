@@ -66,6 +66,7 @@ public class MyModel extends Observable implements Model {
 	 * Instantiates a new my model.
 	 */
 	public MyModel() {
+		
 		properties = PropertiesLoader.getInstance().getProperties();
 		threadPool = Executors.newFixedThreadPool(properties.getNumOfThreads());
 		this.loadSolutions();
@@ -115,6 +116,7 @@ public class MyModel extends Observable implements Model {
 	@Override
 	public void setProperties(Properties prop) {
 		this.properties=prop;
+		notifyObservers(new String [] {"loading_successfully"});
 	}
 
 	/**
@@ -347,6 +349,12 @@ public class MyModel extends Observable implements Model {
 		}
 	}
 
-
+	@Override
+	public void showProperties() {
+		String numOfThreads = properties.getNumOfThreads() + " ";
+		
+		setChanged();
+		notifyObservers(new String [] {"properties", properties.getGenerateMazeAlgorithm(), numOfThreads, properties.getSolveMazeAlgorithm()});
+	}
 
 }

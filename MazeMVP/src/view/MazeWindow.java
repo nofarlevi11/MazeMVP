@@ -14,8 +14,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -31,6 +33,10 @@ public class MazeWindow extends BasicWindow implements View {
 	String mazeName;
 	boolean solveCmdWasSelected = false;
 	MenuBar myMenuBar;
+	
+	String generateAlgo;
+	String numOfThread;
+	String solveAlgo;
 
 	@Override
 	protected void initWidgets() {
@@ -50,11 +56,25 @@ public class MazeWindow extends BasicWindow implements View {
 		Image save = new Image(null, imgd3);
 		ImageData imgd4 = new ImageData("lib/images/load.PNG");
 		Image load = new Image(null, imgd4);
+		ImageData imgd5 = new ImageData("lib/images/properties.PNG");
+		Image properties = new Image(null, imgd5);
 
 		Composite btnGroup = new Composite(shell, SWT.FILL);
 		RowLayout rowLayout = new RowLayout(SWT.FILL);
 		rowLayout.pack = false;
 		btnGroup.setLayout(rowLayout);
+
+		shell.addListener(SWT.Close, new Listener() {
+
+			@Override
+			public void handleEvent(Event arg0) {
+				if (isSure()) {
+					setChanged();
+					notifyObservers("exit");
+				}
+
+			}
+		});
 
 		Button btnGenerateMaze = new Button(btnGroup, SWT.PUSH);
 		btnGenerateMaze.setText("Generate maze");
@@ -76,9 +96,9 @@ public class MazeWindow extends BasicWindow implements View {
 		});
 
 		Button btnSolveMaze = new Button(btnGroup, SWT.PUSH);
-		btnSolveMaze.setText("Solve maze");
+		btnSolveMaze.setText("   Solve maze");
 		btnSolveMaze.setBackground(new Color(null, 255, 215, 0));
-		btnSolveMaze.setImage(eye2);
+		btnSolveMaze.setImage(eye);
 		btnSolveMaze.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -119,9 +139,10 @@ public class MazeWindow extends BasicWindow implements View {
 		mazeDisplay.setFocus();
 
 		Composite btnSaveLoadGroup = new Composite(shell, SWT.FILL);
-		RowLayout rowLayout2 = new RowLayout(SWT.CENTER);
+		RowLayout rowLayout2 = new RowLayout(SWT.FILL);
 		rowLayout2.pack = false;
 		btnSaveLoadGroup.setLayout(rowLayout2);
+		btnSaveLoadGroup.setLayoutData(new GridData(SWT.NONE, SWT.BOTTOM,false,false));
 
 		Button btnSaveMaze = new Button(btnSaveLoadGroup, SWT.PUSH);
 		btnSaveMaze.setText("Save Maze");
@@ -157,6 +178,26 @@ public class MazeWindow extends BasicWindow implements View {
 			}
 		});
 
+		Button btnProperties = new Button(btnSaveLoadGroup, SWT.PUSH);
+		//btnProperties.setText("Properties");
+		btnProperties.setImage(properties);
+		btnProperties.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				setChanged();
+				notifyObservers("show_properties");
+				openPropertiesWindow();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		
 		Button btnExit = new Button(btnSaveLoadGroup, SWT.PUSH);
 		btnExit.setText("Exit");
 		btnExit.addSelectionListener(new SelectionListener() {
@@ -164,8 +205,7 @@ public class MazeWindow extends BasicWindow implements View {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				if (isSure()) {
-					setChanged();
-					notifyObservers("exit");
+					exitProgram(); 
 				}
 			}
 
@@ -177,6 +217,8 @@ public class MazeWindow extends BasicWindow implements View {
 		});
 
 		addMenuBar();
+		
+		
 	}
 
 	private void addMenuBar() {
@@ -404,13 +446,87 @@ public class MazeWindow extends BasicWindow implements View {
 		massageBox.open();
 	}
 
-	protected boolean isSure() {
+	private boolean isSure() {
 		MessageBox msg = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
 		msg.setMessage("Are you sure? you're gonna leave the party :(");
 		int ans = msg.open();
 		if (ans == 64)
 			return true;
 		return false;
+	}
+
+	protected void exitProgram() {
+		setChanged();
+		notifyObservers("exit");
+	}
+
+	@Override
+	public void notifyLoadingSuccessfully() {
+		display.syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				MessageBox msg = new MessageBox(shell);
+				msg.setMessage("Your properties was loaded successfully");
+				msg.open();
+			}
+		});
+		
+	}
+	
+	public void openPropertiesWindow(){
+		
+		Shell shell = new Shell();
+		shell.setText("Properties");
+		shell.setSize(300, 150);
+		
+		GridLayout layout = new GridLayout(2, false);
+		shell.setLayout(layout);
+
+		Label gAlgo = new Label(shell, SWT.NONE);
+		gAlgo.setText("Generation Maze Algorithm: ");
+		gAlgo.setBackground(new Color(null, 255, 255, 255));
+		Label gAlgo2 = new Label(shell, SWT.NONE);
+		gAlgo2.setText(generateAlgo);
+		
+		Label numOfThread = new Label(shell, SWT.NONE);
+		numOfThread.setText("Number Of Threads: ");
+		numOfThread.setBackground(new Color(null, 255, 255, 255));
+		Label numOfThread2 = new Label(shell, SWT.NONE);
+		numOfThread2.setText(this.numOfThread);
+		
+		Label sAlgo = new Label(shell, SWT.NONE);
+		sAlgo.setText("Solving Maze Algorithm: ");
+		sAlgo.setBackground(new Color(null, 255, 255, 255));
+		Label sAlgo2 = new Label(shell, SWT.NONE);
+		sAlgo2.setText(solveAlgo);
+		
+		Button closeProperties = new Button(shell, SWT.PUSH | SWT.BOTTOM);
+		closeProperties.setText("Close");
+		closeProperties.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				shell.close();
+				
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		shell.open();
+	}
+
+	@Override
+	public void showProperties(String[] arguments) {
+		int k = 0;
+		generateAlgo = arguments[k++];
+		numOfThread = arguments[k++];
+		solveAlgo = arguments[k++];
 	}
 
 }

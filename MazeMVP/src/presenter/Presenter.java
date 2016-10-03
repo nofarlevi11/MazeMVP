@@ -65,6 +65,12 @@ public class Presenter implements Observer {
 			case "solution_ready":
 				view.notifyMazeWasSolved(arguments[0]);
 				break;
+			case "loading_successfully":
+				view.notifyLoadingSuccessfully();
+				break;
+			case "properties":
+				view.showProperties(arguments);
+				break;
 			default:
 				view.displayMessage(arguments);
 				break;
