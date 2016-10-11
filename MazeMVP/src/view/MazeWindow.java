@@ -2,8 +2,12 @@ package view;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -27,7 +31,7 @@ import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
 import presenter.Command;
 
-public class MazeWindow extends BasicWindow implements View {
+public class MazeWindow extends BasicWindow implements View, Observer{
 
 	private MazeDisplay mazeDisplay;
 	String mazeName;
@@ -40,7 +44,6 @@ public class MazeWindow extends BasicWindow implements View {
 
 	@Override
 	protected void initWidgets() {
-
 		GridLayout gridLayout = new GridLayout(2, false);
 		shell.setLayout(gridLayout);
 		shell.setText("Nofar's Maze3d Game");
@@ -50,8 +53,6 @@ public class MazeWindow extends BasicWindow implements View {
 
 		ImageData imgd = new ImageData("lib/images/Capture.PNG");
 		Image eye = new Image(null, imgd);
-		ImageData imgd2 = new ImageData("lib/images/Capture2.PNG");
-		Image eye2 = new Image(null, imgd2);
 		ImageData imgd3 = new ImageData("lib/images/save.PNG");
 		Image save = new Image(null, imgd3);
 		ImageData imgd4 = new ImageData("lib/images/load.PNG");
@@ -72,7 +73,6 @@ public class MazeWindow extends BasicWindow implements View {
 					setChanged();
 					notifyObservers("exit");
 				}
-
 			}
 		});
 
@@ -223,6 +223,7 @@ public class MazeWindow extends BasicWindow implements View {
 
 	private void addMenuBar() {
 		myMenuBar = new MenuBar(shell, SWT.NONE);
+		myMenuBar.addObserver(this);
 		myMenuBar.createMenuBar();
 	}
 
@@ -409,11 +410,11 @@ public class MazeWindow extends BasicWindow implements View {
 					MessageBox msg = new MessageBox(shell);
 					msg.setMessage("The solution for " + name + " is ready!");
 					msg.open();
-				} else {
-					MessageBox msg = new MessageBox(shell);
-					msg.setMessage("Your hint is ready!");
-					msg.open();
-				}
+				} //else {
+//					MessageBox msg = new MessageBox(shell);
+//					msg.setMessage("Your hint is ready!");
+//					msg.open();
+//				}
 
 				setChanged();
 				notifyObservers("display_solution " + name);
@@ -528,5 +529,24 @@ public class MazeWindow extends BasicWindow implements View {
 		numOfThread = arguments[k++];
 		solveAlgo = arguments[k++];
 	}
+	
+	
 
+	@Override
+	public void update(Observable o, Object args) {
+		if (o == myMenuBar) {
+			String commandLine = (String) args;
+
+			String commandsArr[] = commandLine.split(" ");
+			String command = commandsArr[0];
+			String commandArgs = null;
+			if (commandsArr.length > 1) {
+				commandArgs = commandLine.substring(commandLine.indexOf(" ") + 1);
+			}
+			setChanged();
+			notifyObservers(command + " " + commandArgs);
+		}
+	
+	}
+	
 }

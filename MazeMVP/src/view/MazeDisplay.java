@@ -18,6 +18,7 @@ import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
 
+
 public class MazeDisplay extends Canvas {
 
 	private int[][] mazeDataDisplay;
@@ -27,7 +28,12 @@ public class MazeDisplay extends Canvas {
 	private SpecificPoint goalPoint = new SpecificPoint("goal.png");
 	private SpecificPoint floorAbove = new SpecificPoint("up.png");
 	private SpecificPoint floorBelow = new SpecificPoint("down.png");
+	private SpecificPoint up_down = new SpecificPoint("up_down.png");
 	private SpecificPoint wallPoint = new SpecificPoint("wall.png");
+	private SpecificPoint hint = new SpecificPoint("clue.png");
+
+	int j;
+
 	public boolean win = false;
 
 	public void setMazeData(int[][] mazeData) {
@@ -35,8 +41,11 @@ public class MazeDisplay extends Canvas {
 		this.redraw();
 	}
 
+	Shell shell;
+
 	public MazeDisplay(Shell parent, int style) {
 		super(parent, style);
+		shell = parent;
 		character = new Character();
 		character.setPosition(new Position(0, 0, 0));
 
@@ -95,11 +104,14 @@ public class MazeDisplay extends Canvas {
 						redraw();
 					}
 					break;
+				default:
+					break;
 				}
 
 			}
 
 		});
+
 	}
 
 	protected void addPaintListener() {
@@ -132,10 +144,13 @@ public class MazeDisplay extends Canvas {
 							// check for options to go up or down (other floor)
 							ArrayList<Position> moves = maze
 									.getPossibleMoves(new Position(character.getPosition().z, i, j));
-							if (moves.contains(new Position(character.getPosition().z + 1, i, j))) {// up
+							if (moves.contains(new Position(character.getPosition().z + 1, i, j))
+									&& moves.contains(new Position(character.getPosition().z - 1, i, j))) {
+								up_down.draw(w, h, e.gc, (new Position(character.getPosition().z + 1, i, j)));
+							} else if (moves.contains(new Position(character.getPosition().z + 1, i, j))) {// up
 								floorAbove.draw(w, h, e.gc, (new Position(character.getPosition().z + 1, i, j)));
 							} else if (moves.contains(new Position(character.getPosition().z - 1, i, j))) {// down
-								floorBelow.draw(w, h, e.gc, (new Position(character.getPosition().z - 1, i, j)));
+								floorBelow.draw(w, h, e.gc, (new Position(character.getPosition().z + 1, i, j)));
 							}
 						}
 					}
@@ -173,7 +188,34 @@ public class MazeDisplay extends Canvas {
 		shell.setSize(600, 400);
 		shell.open();
 
+		// playSound("endParty");
+
 	}
+
+	// private void playSound(String sound) {
+	// InputStream file = new InputStream("lib/sounds/" + sound + ".mp3");
+	// AudioInputStream mySound = new AudioInputStream(file, null, 5);
+	// try {
+	// clip = AudioSystem.getClip();
+	// try {
+	// clip.open(AudioSystem.getAudioInputStream(clap));
+	// } catch (IOException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// } catch (UnsupportedAudioFileException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	//
+	// } catch (LineUnavailableException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// clip.start();
+	//
+	// // Tread.sleep(clip.getMicrosecondLength()/1000);
+	//
+	// }
 
 	public void setCharacterPosition(Position pos) {
 		character.setPosition(pos);
@@ -202,10 +244,16 @@ public class MazeDisplay extends Canvas {
 								return;
 								// TODO: fix this line
 							}
-
-							character.setPosition(sol.getStates().get(i++).getValue());
-							setMazeData(maze.getCrossSectionByZ(character.getPosition().z));
-							redraw();
+							if (character.getPosition().z == sol.getStates().get(i).getValue().z) {
+								character.setPosition(sol.getStates().get(i++).getValue());
+								setMazeData(maze.getCrossSectionByZ(character.getPosition().z));
+								redraw();
+							} else {
+								character.setPosition(sol.getStates().get(i + 1).getValue());
+								i++;
+								setMazeData(maze.getCrossSectionByZ(character.getPosition().z));
+								redraw();
+							}
 						}
 					});
 
@@ -220,36 +268,40 @@ public class MazeDisplay extends Canvas {
 
 	public void printHint(Solution<Position> sol) {
 
-		{
-			TimerTask task = new TimerTask() {
-				int i = 0;
+		Position currPos = character.getPosition();
 
-				@Override
-				public void run() {
-					getDisplay().syncExec(new Runnable() {
+		for (j = 0; j < sol.getStates().size(); j++)
+			if (sol.getStates().get(j).getValue().equals(currPos))
+				break;
 
-						@Override
-						public void run() {
+		TimerTask task = new TimerTask() {
 
-							if (i == 4) {
-								cancel();
-								return;
-							}
+			int i = 0;
 
-							character.setPosition(sol.getStates().get(i++).getValue());
-							setMazeData(maze.getCrossSectionByZ(character.getPosition().z));
-							redraw();
+			@Override
+			public void run() {
+				getDisplay().syncExec(new Runnable() {
+
+					@Override
+					public void run() {
+
+						if ((j == sol.getStates().size()) || i == 3 || i == sol.getStates().size()) {
+							cancel();
+							return;
 						}
 
-					});
-
-				}
-			};
-
-			Timer timer = new Timer();
-			timer.scheduleAtFixedRate(task, 0, 500);
-
-		}
+						if ((j != 0) || (j != sol.getStates().size())) {
+							character.setPosition(sol.getStates().get(j++).getValue());
+							setMazeData(maze.getCrossSectionByZ(character.getPosition().z));
+							redraw();
+							i++;
+						}
+					}
+				});
+			}
+		};
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(task, 0, 500);
 
 	}
 

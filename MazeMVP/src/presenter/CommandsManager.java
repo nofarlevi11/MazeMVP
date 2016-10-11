@@ -292,7 +292,9 @@ public class CommandsManager {
 			if (model.isGoodInput(1, args.length)) {
 				String file = args[0];
 				PropertiesLoader.loadXML(file);
+				System.out.println(file);
 				model.setProperties(PropertiesLoader.getProperties());
+				
 			}
 
 		}

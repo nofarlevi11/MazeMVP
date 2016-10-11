@@ -1,5 +1,7 @@
 package view;
 
+import java.util.Observable;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -10,7 +12,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-public class MenuBar extends MazeWindow {
+public class MenuBar extends Observable {
 
 	Menu myMenu;
 	Shell shell;
@@ -49,7 +51,7 @@ public class MenuBar extends MazeWindow {
 
 				propLoadFileDialog.open();
 				setChanged();
-				System.out.println("load_XML " + propLoadFileDialog.getFilterPath() + "\\" + propLoadFileDialog.getFileName());
+				//System.out.println("load_XML " + propLoadFileDialog.getFilterPath() + "\\" + propLoadFileDialog.getFileName());
 				notifyObservers(
 						"load_XML " + propLoadFileDialog.getFilterPath() + "\\" + propLoadFileDialog.getFileName());
 				notifyLoadingSuccess();
@@ -70,18 +72,15 @@ public class MenuBar extends MazeWindow {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				if (isSure()) {
-					exitProgram();
-
+					setChanged();
+					notifyObservers("exit");
 				}
 			}
-
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 				// TODO Auto-generated method stub
 			}
-
 		});
-
 	}
 
 	private void notifyLoadingSuccess() {
@@ -89,7 +88,6 @@ public class MenuBar extends MazeWindow {
 		MessageBox msg = new MessageBox(shell);
 		msg.setMessage("The Properties file was loaded successfully");
 		msg.open();
-
 	}
 	
 	private boolean isSure() {
@@ -100,5 +98,4 @@ public class MenuBar extends MazeWindow {
 			return true;
 		return false;
 	}
-
 }
