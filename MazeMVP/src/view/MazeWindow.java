@@ -31,17 +31,39 @@ import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
 import presenter.Command;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MazeWindow.
+ */
 public class MazeWindow extends BasicWindow implements View, Observer{
 
+	/** The maze display. */
 	private MazeDisplay mazeDisplay;
+	
+	/** The maze name. */
 	String mazeName;
+	
+	/** The solve cmd was selected. */
 	boolean solveCmdWasSelected = false;
+	
+	/** The my menu bar. */
 	MenuBar myMenuBar;
 	
+	/** The user interface. */
+	String userInterface;
+	
+	/** The generate algo. */
 	String generateAlgo;
+	
+	/** The num of thread. */
 	String numOfThread;
+	
+	/** The solve algo. */
 	String solveAlgo;
 
+	/* (non-Javadoc)
+	 * @see view.BasicWindow#initWidgets()
+	 */
 	@Override
 	protected void initWidgets() {
 		GridLayout gridLayout = new GridLayout(2, false);
@@ -221,12 +243,18 @@ public class MazeWindow extends BasicWindow implements View, Observer{
 		
 	}
 
+	/**
+	 * Adds the menu bar.
+	 */
 	private void addMenuBar() {
 		myMenuBar = new MenuBar(shell, SWT.NONE);
 		myMenuBar.addObserver(this);
 		myMenuBar.createMenuBar();
 	}
 
+	/**
+	 * Show generate maze options.
+	 */
 	protected void showGenerateMazeOptions() {
 		Shell shell = new Shell();
 		shell.setText("Generate Maze");
@@ -271,6 +299,9 @@ public class MazeWindow extends BasicWindow implements View, Observer{
 		shell.open();
 	}
 
+	/**
+	 * Open save window.
+	 */
 	private void openSaveWindow() {
 		FileDialog fd = new FileDialog(shell, SWT.SAVE);
 		fd.setText("Save Maze");
@@ -303,6 +334,9 @@ public class MazeWindow extends BasicWindow implements View, Observer{
 		}
 	}
 
+	/**
+	 * Open load window.
+	 */
 	private void openLoadWindow() {
 		FileDialog fd = new FileDialog(shell, SWT.OPEN);
 		fd.setText("Load Maze");
@@ -347,6 +381,9 @@ public class MazeWindow extends BasicWindow implements View, Observer{
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see view.View#notifyMazeIsReady(java.lang.String)
+	 */
 	@Override
 	public void notifyMazeIsReady(String name) {
 		display.syncExec(new Runnable() {
@@ -364,6 +401,9 @@ public class MazeWindow extends BasicWindow implements View, Observer{
 		});
 	}
 
+	/* (non-Javadoc)
+	 * @see view.View#displayMaze(algorithms.mazeGenerators.Maze3d)
+	 */
 	@Override
 	public void displayMaze(Maze3d maze) {
 
@@ -373,17 +413,26 @@ public class MazeWindow extends BasicWindow implements View, Observer{
 		mazeDisplay.setMazeData(mazeData);
 	}
 
+	/* (non-Javadoc)
+	 * @see view.View#start()
+	 */
 	@Override
 	public void start() {
 		run();
 	}
 
+	/* (non-Javadoc)
+	 * @see view.View#setCommands(java.util.HashMap)
+	 */
 	@Override
 	public void setCommands(HashMap<String, Command> commands) {
 		// TODO Auto-generated method stub
 
 	}
 
+	/* (non-Javadoc)
+	 * @see view.View#printAnswers(java.lang.String[])
+	 */
 	@Override
 	public void printAnswers(String[] msg) {
 		MessageBox massageBox = new MessageBox(shell, SWT.ICON_INFORMATION);
@@ -395,11 +444,17 @@ public class MazeWindow extends BasicWindow implements View, Observer{
 
 	}
 
+	/* (non-Javadoc)
+	 * @see view.View#printCrossSection(int[][])
+	 */
 	@Override
 	public void printCrossSection(int[][] maze2d) {
 		// TODO Auto-generated method stub
 	}
 
+	/* (non-Javadoc)
+	 * @see view.View#notifyMazeWasSolved(java.lang.String)
+	 */
 	@Override
 	public void notifyMazeWasSolved(String name) {
 		display.syncExec(new Runnable() {
@@ -424,6 +479,9 @@ public class MazeWindow extends BasicWindow implements View, Observer{
 		});
 	}
 
+	/* (non-Javadoc)
+	 * @see view.View#displaySolution(algorithms.search.Solution)
+	 */
 	@Override
 	public void displaySolution(Solution<Position> sol) {
 		if (solveCmdWasSelected) {
@@ -432,11 +490,17 @@ public class MazeWindow extends BasicWindow implements View, Observer{
 			mazeDisplay.printHint(sol);
 	}
 
+	/* (non-Javadoc)
+	 * @see view.View#printHelp()
+	 */
 	@Override
 	public void printHelp() {
 		// TODO Auto-generated method stub
 	}
 
+	/* (non-Javadoc)
+	 * @see view.View#displayMessage(java.lang.String[])
+	 */
 	@Override
 	public void displayMessage(String[] msg) {
 		MessageBox massageBox = new MessageBox(shell, SWT.ICON_INFORMATION);
@@ -447,6 +511,11 @@ public class MazeWindow extends BasicWindow implements View, Observer{
 		massageBox.open();
 	}
 
+	/**
+	 * Checks if is sure.
+	 *
+	 * @return true, if is sure
+	 */
 	private boolean isSure() {
 		MessageBox msg = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
 		msg.setMessage("Are you sure? you're gonna leave the party :(");
@@ -456,11 +525,17 @@ public class MazeWindow extends BasicWindow implements View, Observer{
 		return false;
 	}
 
+	/**
+	 * Exit program.
+	 */
 	protected void exitProgram() {
 		setChanged();
 		notifyObservers("exit");
 	}
 
+	/* (non-Javadoc)
+	 * @see view.View#notifyLoadingSuccessfully()
+	 */
 	@Override
 	public void notifyLoadingSuccessfully() {
 		display.syncExec(new Runnable() {
@@ -475,6 +550,9 @@ public class MazeWindow extends BasicWindow implements View, Observer{
 		
 	}
 	
+	/**
+	 * Open properties window.
+	 */
 	public void openPropertiesWindow(){
 		
 		Shell shell = new Shell();
@@ -484,23 +562,30 @@ public class MazeWindow extends BasicWindow implements View, Observer{
 		GridLayout layout = new GridLayout(2, false);
 		shell.setLayout(layout);
 
+		Label uInterface = new Label(shell, SWT.NONE);
+		uInterface.setText("User Interface: ");
+		uInterface.setBackground(new Color(null, 255, 255, 255));
+		Label uInterface2 = new Label(shell, SWT.NONE);
+		uInterface2.setText(userInterface);
+		
 		Label gAlgo = new Label(shell, SWT.NONE);
 		gAlgo.setText("Generation Maze Algorithm: ");
 		gAlgo.setBackground(new Color(null, 255, 255, 255));
 		Label gAlgo2 = new Label(shell, SWT.NONE);
 		gAlgo2.setText(generateAlgo);
 		
-		Label numOfThread = new Label(shell, SWT.NONE);
-		numOfThread.setText("Number Of Threads: ");
-		numOfThread.setBackground(new Color(null, 255, 255, 255));
-		Label numOfThread2 = new Label(shell, SWT.NONE);
-		numOfThread2.setText(this.numOfThread);
-		
 		Label sAlgo = new Label(shell, SWT.NONE);
 		sAlgo.setText("Solving Maze Algorithm: ");
 		sAlgo.setBackground(new Color(null, 255, 255, 255));
 		Label sAlgo2 = new Label(shell, SWT.NONE);
 		sAlgo2.setText(solveAlgo);
+		
+		Label numOfThread = new Label(shell, SWT.NONE);
+		numOfThread.setText("Number Of Threads: ");
+		numOfThread.setBackground(new Color(null, 255, 255, 255));
+		Label numOfThread2 = new Label(shell, SWT.NONE);
+		numOfThread2.setText(this.numOfThread);
+
 		
 		Button closeProperties = new Button(shell, SWT.PUSH | SWT.BOTTOM);
 		closeProperties.setText("Close");
@@ -522,16 +607,22 @@ public class MazeWindow extends BasicWindow implements View, Observer{
 		shell.open();
 	}
 
+	/* (non-Javadoc)
+	 * @see view.View#showProperties(java.lang.String[])
+	 */
 	@Override
 	public void showProperties(String[] arguments) {
 		int k = 0;
+		userInterface = arguments[k++];
 		generateAlgo = arguments[k++];
 		numOfThread = arguments[k++];
 		solveAlgo = arguments[k++];
 	}
 	
-	
 
+	/* (non-Javadoc)
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
 	@Override
 	public void update(Observable o, Object args) {
 		if (o == myMenuBar) {
@@ -546,7 +637,5 @@ public class MazeWindow extends BasicWindow implements View, Observer{
 			setChanged();
 			notifyObservers(command + " " + commandArgs);
 		}
-	
 	}
-	
 }

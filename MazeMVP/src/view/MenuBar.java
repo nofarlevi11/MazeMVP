@@ -12,11 +12,24 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MenuBar.
+ */
 public class MenuBar extends Observable {
 
+	/** The my menu. */
 	Menu myMenu;
+	
+	/** The shell. */
 	Shell shell;
 
+	/**
+	 * Instantiates a new menu bar.
+	 *
+	 * @param shell the shell
+	 * @param style the style
+	 */
 	MenuBar(Shell shell, int style) {
 		this.shell = shell;
 
@@ -26,11 +39,17 @@ public class MenuBar extends Observable {
 		myMenu = new Menu(shell, SWT.BAR);
 	}
 
+	/**
+	 * Creates the menu bar.
+	 */
 	public void createMenuBar() {
 		addMenuItems();
 		shell.setMenuBar(myMenu);
 	}
 
+	/**
+	 * Adds the menu items.
+	 */
 	private void addMenuItems() {
 		MenuItem fileMenuHeader = new MenuItem(myMenu, SWT.CASCADE);
 		fileMenuHeader.setText("&file");
@@ -51,7 +70,6 @@ public class MenuBar extends Observable {
 
 				propLoadFileDialog.open();
 				setChanged();
-				//System.out.println("load_XML " + propLoadFileDialog.getFilterPath() + "\\" + propLoadFileDialog.getFileName());
 				notifyObservers(
 						"load_XML " + propLoadFileDialog.getFilterPath() + "\\" + propLoadFileDialog.getFileName());
 				notifyLoadingSuccess();
@@ -65,9 +83,9 @@ public class MenuBar extends Observable {
 
 		});
 
-		MenuItem exitItem = new MenuItem(fileMenu, SWT.PUSH);
+		MenuItem exitItem = new MenuItem(fileMenu, SWT.PUSH); //item for exit the program
 		exitItem.setText("Exit");
-		exitItem.addSelectionListener(new SelectionListener() {
+		exitItem.addSelectionListener(new SelectionListener() { 
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -83,6 +101,9 @@ public class MenuBar extends Observable {
 		});
 	}
 
+	/**
+	 * Notify loading success.
+	 */
 	private void notifyLoadingSuccess() {
 
 		MessageBox msg = new MessageBox(shell);
@@ -90,6 +111,11 @@ public class MenuBar extends Observable {
 		msg.open();
 	}
 	
+	/**
+	 * Checks if is sure.
+	 *
+	 * @return true, if is sure
+	 */
 	private boolean isSure() {
 		MessageBox msg = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
 		msg.setMessage("Are you sure? you're gonna leave the party :(");

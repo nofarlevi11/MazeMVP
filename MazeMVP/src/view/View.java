@@ -80,14 +80,33 @@ public interface View {
 
 	/**
 	 * Notify bad input.
+	 *
+	 * @param msg the msg
 	 */
 	void displayMessage(String[] msg);
+	
+	/**
+	 * Prints the help.
+	 */
 	void printHelp();
 
+	/**
+	 * Adds the observer.
+	 *
+	 * @param observer the observer
+	 */
 	void addObserver(Observer observer);
 
+	/**
+	 * Notify loading successfully.
+	 */
 	void notifyLoadingSuccessfully();
 
+	/**
+	 * Show properties.
+	 *
+	 * @param arguments the arguments
+	 */
 	void showProperties(String[] arguments);
 	
 }

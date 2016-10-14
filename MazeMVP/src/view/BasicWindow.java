@@ -8,14 +8,27 @@ import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BasicWindow.
+ */
 public abstract class BasicWindow extends Observable implements Runnable {
 
+	/** The display. */
 	protected Display display;
+	
+	/** The shell. */
 	protected Shell shell;
 	
 	
+	/**
+	 * Inits the widgets.
+	 */
 	protected abstract void initWidgets();
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		display = new Display();  // our display

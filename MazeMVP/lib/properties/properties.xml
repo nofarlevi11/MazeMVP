@@ -10,5 +10,8 @@
   <void property="solveMazeAlgorithm">
    <string>DFS</string>
   </void>
+  <void property="userInterface">
+   <string>GUI</string>
+  </void>
  </object>
 </java>

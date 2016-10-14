@@ -31,6 +31,7 @@ import io.MyDecompressorInputStream;
 import properties.Properties;
 import properties.PropertiesLoader;
 
+// TODO: Auto-generated Javadoc
 /**
  * <h1>The Class MyModel.</h1>
  * <p>
@@ -60,6 +61,8 @@ public class MyModel extends Observable implements Model {
 
 	/** The open files. */
 	protected List<String> openFiles = new ArrayList<String>();
+	
+	/** The properties. */
 	protected Properties properties;
 
 	/**
@@ -67,9 +70,10 @@ public class MyModel extends Observable implements Model {
 	 */
 	public MyModel() {
 		
-		properties = PropertiesLoader.getInstance().getProperties();
+		PropertiesLoader.getInstance();
+		properties = PropertiesLoader.getProperties();
 		threadPool = Executors.newFixedThreadPool(properties.getNumOfThreads());
-		this.loadSolutions();
+		this.loadSolutions(); //loading all of the solutions of the mazes which was solved and saved
 	}
 
 	/**
@@ -101,6 +105,9 @@ public class MyModel extends Observable implements Model {
 		this.threadPool = threadPool;
 	}
 
+	/* (non-Javadoc)
+	 * @see model.Model#getMaze(java.lang.String)
+	 */
 	/*
 	 * @see model.Model#getMaze(java.lang.String)
 	 */
@@ -109,10 +116,16 @@ public class MyModel extends Observable implements Model {
 		return mazes.get(name);
 	}
 
+	/* (non-Javadoc)
+	 * @see model.Model#getProperties()
+	 */
 	public Properties getProperties() {
 		return this.properties;
 	}
 	
+	/* (non-Javadoc)
+	 * @see model.Model#setProperties(properties.Properties)
+	 */
 	@Override
 	public void setProperties(Properties prop) {
 		this.properties=prop;
@@ -128,6 +141,9 @@ public class MyModel extends Observable implements Model {
 		return mazes;
 	}
 
+	/* (non-Javadoc)
+	 * @see model.Model#generateMaze(java.lang.String, int, int, int, algorithms.mazeGenerators.Maze3dGenerator)
+	 */
 	/*
 	 * @see model.Model#generateMaze(java.lang.String, int, int, int)
 	 */
@@ -148,6 +164,9 @@ public class MyModel extends Observable implements Model {
 		});
 	}
 
+	/* (non-Javadoc)
+	 * @see model.Model#setMaze(java.lang.String, algorithms.mazeGenerators.Maze3d)
+	 */
 	/*
 	 * @see model.Model#setMaze(java.lang.String,
 	 * algorithms.mazeGenerators.Maze3d)
@@ -158,6 +177,9 @@ public class MyModel extends Observable implements Model {
 			mazes.put(name, maze);
 	}
 
+	/* (non-Javadoc)
+	 * @see model.Model#solveMaze(java.lang.String, algorithms.search.Seracher)
+	 */
 	/*
 	 * @see model.Model#solveMaze(java.lang.String, algorithms.search.Seracher)
 	 */
@@ -182,6 +204,9 @@ public class MyModel extends Observable implements Model {
 		});
 	}
 
+	/* (non-Javadoc)
+	 * @see model.Model#getSolution(java.lang.String)
+	 */
 	/*
 	 * @see model.Model#getSolution(java.lang.String)
 	 */
@@ -190,10 +215,19 @@ public class MyModel extends Observable implements Model {
 		return solutions.get(mazes.get(name));
 	}
 
+	/**
+	 * Sets the solution.
+	 *
+	 * @param name the name
+	 * @param sol the sol
+	 */
 	public void setSolution(String name, Solution<Position> sol) {
 		solutions.put(mazes.get(name), sol);
 	}
 
+	/* (non-Javadoc)
+	 * @see model.Model#saveMaze(java.lang.String, java.lang.String)
+	 */
 	/*
 	 * @see model.Model#saveMaze(java.lang.String, java.lang.String)
 	 */
@@ -226,6 +260,9 @@ public class MyModel extends Observable implements Model {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see model.Model#loadMaze(java.lang.String, java.lang.String)
+	 */
 	/*
 	 * @see model.Model#loadMaze(java.lang.String, java.lang.String)
 	 */
@@ -271,11 +308,14 @@ public class MyModel extends Observable implements Model {
 		notifyObservers(new String[] { "maze_ready", name });
 	}
 
+	/* (non-Javadoc)
+	 * @see model.Model#exit()
+	 */
 	/*
 	 * @see model.Model#exit()
 	 */
 	public void exit() {
-		// saving the solution for the next run befor close
+		// saving the solution for the next run before close
 		saveSolutions();
 		// terminate all of the Callable threads
 		threadPool.shutdownNow();
@@ -284,13 +324,13 @@ public class MyModel extends Observable implements Model {
 		if (!openFiles.isEmpty()) {
 			openFiles.clear();
 		}
+		
 		System.exit(0);
 	}
 
 	/*
 	 * @see model.Model#isGoodInput(int, int)
 	 */
-	
 	@Override
 	public boolean isGoodInput(int numOfArgs, int inputArgs) {
 		if (numOfArgs == inputArgs)
@@ -302,6 +342,9 @@ public class MyModel extends Observable implements Model {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see model.Model#loadSolutions()
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void loadSolutions() {
 		File file = new File("solutions.dat");
@@ -329,7 +372,10 @@ public class MyModel extends Observable implements Model {
 		}
 	}
 
-	protected void saveSolutions() {
+	/**
+	 * Save solutions.
+	 */
+	protected void saveSolutions() { //saving the solutions of the solved (by the command)nmazes
 		ObjectOutputStream oos = null;
 		try {
 			oos = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream("solutions.dat")));
@@ -349,12 +395,15 @@ public class MyModel extends Observable implements Model {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see model.Model#showProperties()
+	 */
 	@Override
 	public void showProperties() {
-		String numOfThreads = properties.getNumOfThreads() + " ";
+		String numOfThreads = properties.getNumOfThreads() + " "; //become String
 		
 		setChanged();
-		notifyObservers(new String [] {"properties", properties.getGenerateMazeAlgorithm(), numOfThreads, properties.getSolveMazeAlgorithm()});
+		notifyObservers(new String [] {"properties", properties.getUserInterface(), properties.getGenerateMazeAlgorithm(), numOfThreads, properties.getSolveMazeAlgorithm()});
 	}
 
 }

@@ -14,7 +14,7 @@ import properties.Properties;
  * <h1> The Interface Model. </h1>
  * <p>
  * This interface will be implements by specific models - <p>
- * classes that are the MODEL in a MVC (model, view, controller) pattern
+ * classes that are the MODEL in a MVC / MPV architectural pattern
  * <p>
  * 
  * @author NofarLevi
@@ -28,7 +28,8 @@ public interface Model {
 	 * @param name the name of the maze
 	 * @param floors the floors (z)
 	 * @param rows the rows (y)
-	 * @param cols the cols (x)
+	 * @param cols the columns (x)
+	 * @param generateAlgo the generate algo
 	 */
 	void generateMaze(String name, int floors, int rows, int cols, Maze3dGenerator generateAlgo);
 	
@@ -86,7 +87,12 @@ public interface Model {
 	 */
 	 Solution<Position> getSolution (String name);
 
-	 Properties getProperties();
+	 /**
+ 	 * Gets the properties.
+ 	 *
+ 	 * @return the properties
+ 	 */
+ 	Properties getProperties();
 	
 	/**
 	 * Checks if is good input.
@@ -97,10 +103,21 @@ public interface Model {
 	 */
 	boolean isGoodInput(int numOfArgs, int inputArgs);
 	 
+	/**
+	 * Load solutions.
+	 */
 	void loadSolutions ();
 
+	/**
+	 * Sets the properties.
+	 *
+	 * @param prop the new properties
+	 */
 	void setProperties(Properties prop);
 
+	/**
+	 * Show properties - showing the current properties
+	 */
 	void showProperties();
 
 

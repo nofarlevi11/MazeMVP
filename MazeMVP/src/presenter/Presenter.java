@@ -6,13 +6,36 @@ import java.util.Observer;
 import model.Model;
 import view.View;
 
+/**
+ * <h1> The Class Presenter. </h1>
+ * <p>
+ * This class will be the connection between model and view in MVP / MVC pattern - <p>
+ * <p>
+ * 
+ * @author NofarLevi
+ * @since October 2016
+ */
+
 public class Presenter implements Observer {
 
+	/** The model. */
 	private Model model;
+	
+	/** The view. */
 	private View view;
+	
+	/** The commands manager. */
 	private CommandsManager commandsManager;
+	
+	/** The commands. */
 	private HashMap<String, Command> commands;
 
+	/**
+	 * Instantiates a new presenter.
+	 *
+	 * @param model the model
+	 * @param view the view
+	 */
 	public Presenter(Model model, View view) {
 		this.model = model;
 		this.view = view;
@@ -20,21 +43,24 @@ public class Presenter implements Observer {
 		commands = commandsManager.getCommandsMap();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
 	@Override
 	public void update(Observable o, Object args) {
 		if (o == view) {
 
 			String commandLine = (String) args;
 
-			String commandsArr[] = commandLine.split(" ");
-			String command = commandsArr[0];
+			String commandsArr[] = commandLine.split(" "); //put the command and the arguments in an Array of String
+			String command = commandsArr[0]; //split the command
 			if (command.equals("help"))
 				view.printHelp();
 			else if (!commands.containsKey(command)) {
 				view.displayMessage(new String[] { "Critical Error", "Command doesn't exist!" });
 			} else {
 				String[] arguments = null;
-				if (commandsArr.length > 1) {
+				if (commandsArr.length > 1) { //if there are arguments after the command
 					String commandArgs = commandLine.substring(commandLine.indexOf(" ") + 1);
 					arguments = commandArgs.split(" ");
 				}
@@ -55,7 +81,7 @@ public class Presenter implements Observer {
 					arguments[i] = commandsArr[i + 1];
 				}
 			}
-			switch (command) {
+			switch (command) { //switch between the commands that comes from model
 			case "error":
 				view.displayMessage(arguments);
 				break;

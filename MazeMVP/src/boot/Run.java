@@ -19,13 +19,14 @@ public class Run {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		PrintWriter out = new PrintWriter(System.out);
 
-//		HashMap <String, View> userInterfaces = new HashMap<String,View>();
-//		userInterfaces.put("CLI", new MyView(in,out));
-//		userInterfaces.put("GUI", new MazeWindow());
+		HashMap <String, View> userInterfaces = new HashMap<String,View>();
+		userInterfaces.put("CLI", new MyView(in,out));
+		userInterfaces.put("GUI", new MazeWindow());
 		
-//		MyView view = new MyView(in, out);
-		MazeWindow view = new MazeWindow();
 		MyModel model = new MyModel();
+		String userInterface = model.getProperties().getUserInterface();
+		View view = userInterfaces.get(userInterface);
+
 		
 		Presenter presenter = new Presenter(model, view);
 		model.addObserver(presenter);
@@ -33,5 +34,4 @@ public class Run {
 				
 		view.start();
 	}
-
 }

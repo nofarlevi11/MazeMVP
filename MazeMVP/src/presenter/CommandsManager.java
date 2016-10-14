@@ -17,6 +17,10 @@ import model.Model;
 import properties.PropertiesLoader;
 import view.View;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CommandsManager.
+ */
 public class CommandsManager {
 
 	/** The model. */
@@ -65,11 +69,7 @@ public class CommandsManager {
 	 */
 	public class GenerateMazeCommand implements Command {
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see controller.Command#doCommand(java.lang.String[])
-		 */
+
 		@Override
 		public void doCommand(String[] args) {
 
@@ -85,7 +85,13 @@ public class CommandsManager {
 		}
 	}
 
-	public Maze3dGenerator getGenerator(String generator) {
+	/**
+	 * Gets the generator.
+	 *
+	 * @param generator the generator
+	 * @return the generator
+	 */
+	public Maze3dGenerator getGenerator(String generator) { //holdoing the data structure for the generators, and return new maze3d generator according the String
 		HashMap<String, Maze3dGenerator> generators = new HashMap<String, Maze3dGenerator>();
 		generators.put("GrowingTree", new GrowingTreeGenerator());
 		generators.put("Simple", new SimpleMaze3dGenerator());
@@ -96,7 +102,13 @@ public class CommandsManager {
 		return generators.get(generator);
 	}
 
-	public Seracher<Position> getAlgorithm(String algo) {
+	/**
+	 * Gets the algorithm.
+	 *
+	 * @param algo the algo
+	 * @return the algorithm
+	 */
+	public Seracher<Position> getAlgorithm(String algo) { //holdoing the data structure for the Search Algorithms, and return new Searcher according the String
 		HashMap<String, CommonSearcher<Position>> commands = new HashMap<String, CommonSearcher<Position>>();
 		commands.put("BFS", new BFS<Position>());
 		commands.put("DFS", new DFS<Position>());
@@ -108,10 +120,7 @@ public class CommandsManager {
 	 */
 	public class DisplayMazeCommand implements Command {
 
-		/*
-		 * 
-		 * @see controller.Command#doCommand(java.lang.String[])
-		 */
+
 		@Override
 		public void doCommand(String[] args) {
 
@@ -128,11 +137,8 @@ public class CommandsManager {
 	 * The Class DirCommand.
 	 */
 	public class DirCommand implements Command {
+		
 
-		/*
-		 * 
-		 * @see controller.Command#doCommand(java.lang.String[])
-		 */
 		@Override
 		public void doCommand(String[] args) {
 
@@ -163,10 +169,7 @@ public class CommandsManager {
 	 */
 	public class DisplayCrossSectionCommand implements Command {
 
-		/*
-		 * 
-		 * @see controller.Command#doCommand(java.lang.String[])
-		 */
+
 		@Override
 		public void doCommand(String[] args) {
 
@@ -199,10 +202,6 @@ public class CommandsManager {
 	 */
 	public class SaveMazeCommand implements Command {
 
-		/*
-		 * 
-		 * @see controller.Command#doCommand(java.lang.String[])
-		 */
 		@Override
 		public void doCommand(String[] args) {
 
@@ -220,10 +219,7 @@ public class CommandsManager {
 	 */
 	public class LoadMazeCommand implements Command {
 
-		/*
-		 * 
-		 * @see controller.Command#doCommand(java.lang.String[])
-		 */
+
 		@Override
 		public void doCommand(String[] args) {
 
@@ -241,10 +237,7 @@ public class CommandsManager {
 	 */
 	public class SolveMazeCommand implements Command {
 
-		/*
-		 * 
-		 * @see controller.Command#doCommand(java.lang.String[])
-		 */
+
 		@Override
 		public void doCommand(String[] args) {
 			// checking if the user entered the right num of parameter
@@ -262,10 +255,7 @@ public class CommandsManager {
 	 */
 	public class DisplaySolutionCommand implements Command {
 
-		/*
-		 * 
-		 * @see controller.Command#doCommand(java.lang.String[])
-		 */
+
 		@Override
 		public void doCommand(String[] args) {
 			// checking if the user entered the right num of parameter
@@ -285,7 +275,10 @@ public class CommandsManager {
 
 	}
 
-	public class LoadPropXMLCommand implements Command {
+	/**
+	 * The Class LoadPropXMLCommand.
+	 */
+	public class LoadPropXMLCommand implements Command { //for loading a properties (XML) file to the program
 
 		@Override
 		public void doCommand(String[] args) {
@@ -300,7 +293,11 @@ public class CommandsManager {
 		}
 
 	}
-	public class ShowPropertiesCommand implements Command {
+	
+	/**
+	 * The Class ShowPropertiesCommand.
+	 */
+	public class ShowPropertiesCommand implements Command { //show to the user the current properties
 
 		@Override
 		public void doCommand(String[] args) {
@@ -314,13 +311,9 @@ public class CommandsManager {
 	 */
 	public class exit implements Command {
 
-		/*
-		 * @see controller.Command#doCommand(java.lang.String[])
-		 */
 		@Override
 		public void doCommand(String[] s) {
 			model.exit();
 		}
-
 	}
 }

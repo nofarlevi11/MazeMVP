@@ -19,30 +19,64 @@ import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MazeDisplay.
+ */
 public class MazeDisplay extends Canvas {
 
+	/** The maze data display. */
 	private int[][] mazeDataDisplay;
+	
+	/** The maze. */
 	private Maze3d maze;
+	
+	/** The character. */
 	private Character character;
+	
+	/** The start point. */
 	private SpecificPoint startPoint = new SpecificPoint("start.png");
+	
+	/** The goal point. */
 	private SpecificPoint goalPoint = new SpecificPoint("goal.png");
+	
+	/** The floor above. */
 	private SpecificPoint floorAbove = new SpecificPoint("up.png");
+	
+	/** The floor below. */
 	private SpecificPoint floorBelow = new SpecificPoint("down.png");
+	
+	/** The up down. */
 	private SpecificPoint up_down = new SpecificPoint("up_down.png");
+	
+	/** The wall point. */
 	private SpecificPoint wallPoint = new SpecificPoint("wall.png");
-	private SpecificPoint hint = new SpecificPoint("clue.png");
-
+	
+	/** The j. */
 	int j;
 
+	/** The win. */
 	public boolean win = false;
 
+	/**
+	 * Sets the maze data.
+	 *
+	 * @param mazeData the new maze data
+	 */
 	public void setMazeData(int[][] mazeData) {
 		this.mazeDataDisplay = mazeData;
 		this.redraw();
 	}
 
+	/** The shell. */
 	Shell shell;
 
+	/**
+	 * Instantiates a new maze display.
+	 *
+	 * @param parent the parent
+	 * @param style the style
+	 */
 	public MazeDisplay(Shell parent, int style) {
 		super(parent, style);
 		shell = parent;
@@ -53,6 +87,9 @@ public class MazeDisplay extends Canvas {
 		addPaintListener();
 	}
 
+	/**
+	 * Adds the key listener.
+	 */
 	protected void addKeyListener() {
 		this.addKeyListener(new KeyListener() {
 
@@ -66,39 +103,39 @@ public class MazeDisplay extends Canvas {
 				ArrayList<Position> moves = maze.getPossibleMoves(pos);
 				switch (e.keyCode) {
 				case SWT.ARROW_RIGHT:
-					if (moves.contains(new Position(pos.z, pos.y, pos.x + 1))) {
+					if (moves.contains(new Position(pos.z, pos.y, pos.x + 1))) { //checking if the right is available
 						character.moveRight();
 						redraw();
 					}
 					break;
 
 				case SWT.ARROW_LEFT:
-					if (moves.contains(new Position(pos.z, pos.y, pos.x - 1))) {
+					if (moves.contains(new Position(pos.z, pos.y, pos.x - 1))) {  //checking if the left is available
 						character.moveLeft();
 						redraw();
 					}
 					break;
 				case SWT.ARROW_UP:
-					if (moves.contains(new Position(pos.z, pos.y - 1, pos.x))) {
+					if (moves.contains(new Position(pos.z, pos.y - 1, pos.x))) { //checking if the up is available
 						character.moveForeword();
 						redraw();
 					}
 					break;
 				case SWT.ARROW_DOWN:
-					if (moves.contains(new Position(pos.z, pos.y + 1, pos.x))) {
+					if (moves.contains(new Position(pos.z, pos.y + 1, pos.x))) {//checking if the down is available
 						character.moveBackward();
 						redraw();
 					}
 					break;
 				case SWT.PAGE_UP:
-					if (moves.contains(new Position(pos.z + 1, pos.y, pos.x))) {
+					if (moves.contains(new Position(pos.z + 1, pos.y, pos.x))) { //checking if the up-floor is available
 						mazeDataDisplay = maze.getCrossSectionByZ(pos.z + 2);
 						character.moveUp();
 						redraw();
 					}
 					break;
 				case SWT.PAGE_DOWN:
-					if (moves.contains(new Position(pos.z - 1, pos.y, pos.x))) {
+					if (moves.contains(new Position(pos.z - 1, pos.y, pos.x))) { //checking if the down-floor is available
 						mazeDataDisplay = maze.getCrossSectionByZ(pos.z - 2);
 						character.moveDown();
 						redraw();
@@ -114,6 +151,9 @@ public class MazeDisplay extends Canvas {
 
 	}
 
+	/**
+	 * Adds the paint listener.
+	 */
 	protected void addPaintListener() {
 		this.addPaintListener(new PaintListener() {
 
@@ -164,7 +204,7 @@ public class MazeDisplay extends Canvas {
 				}
 				character.draw(w, h, e.gc);
 
-				if (character.getPosition().equals(maze.getGoalPosition()) && !win) {
+				if (character.getPosition().equals(maze.getGoalPosition()) && !win) { //if win
 					openWinWindow();
 				}
 			}
@@ -172,7 +212,10 @@ public class MazeDisplay extends Canvas {
 
 	}
 
-	protected void openWinWindow() {
+	/**
+	 * Open win window.
+	 */
+	protected void openWinWindow() { //open when the character gets to the goal point
 		Shell shell = new Shell();
 		shell.setSize(400, 400);
 		shell.addPaintListener(new PaintListener() {
@@ -188,45 +231,33 @@ public class MazeDisplay extends Canvas {
 		shell.setSize(600, 400);
 		shell.open();
 
-		// playSound("endParty");
-
 	}
 
-	// private void playSound(String sound) {
-	// InputStream file = new InputStream("lib/sounds/" + sound + ".mp3");
-	// AudioInputStream mySound = new AudioInputStream(file, null, 5);
-	// try {
-	// clip = AudioSystem.getClip();
-	// try {
-	// clip.open(AudioSystem.getAudioInputStream(clap));
-	// } catch (IOException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// } catch (UnsupportedAudioFileException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	//
-	// } catch (LineUnavailableException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// clip.start();
-	//
-	// // Tread.sleep(clip.getMicrosecondLength()/1000);
-	//
-	// }
-
+	/**
+	 * Sets the character position.
+	 *
+	 * @param pos the new character position
+	 */
 	public void setCharacterPosition(Position pos) {
 		character.setPosition(pos);
 	}
 
+	/**
+	 * Sets the maze.
+	 *
+	 * @param maze the new maze
+	 */
 	public void setMaze(Maze3d maze) {
 		this.maze = maze;
 		this.redraw();
 	}
 
-	public void printSolution(Solution<Position> sol) {
+	/**
+	 * Prints the solution.
+	 *
+	 * @param sol the sol
+	 */
+	public void printSolution(Solution<Position> sol) { //show the solution
 
 		{
 			TimerTask task = new TimerTask() {
@@ -249,7 +280,7 @@ public class MazeDisplay extends Canvas {
 								setMazeData(maze.getCrossSectionByZ(character.getPosition().z));
 								redraw();
 							} else {
-								character.setPosition(sol.getStates().get(i + 1).getValue());
+								character.setPosition(sol.getStates().get(i + 1).getValue()); //skipping the floor/ceiling floor
 								i++;
 								setMazeData(maze.getCrossSectionByZ(character.getPosition().z));
 								redraw();
@@ -260,12 +291,15 @@ public class MazeDisplay extends Canvas {
 				}
 			};
 			Timer timer = new Timer();
-			timer.scheduleAtFixedRate(task, 0, 500);
-
+			timer.scheduleAtFixedRate(task, 0, 500); //move every 500 mili-seconds (half second)
 		}
-
 	}
 
+	/**
+	 * Prints the hint.
+	 *
+	 * @param sol the sol
+	 */
 	public void printHint(Solution<Position> sol) {
 
 		Position currPos = character.getPosition();
