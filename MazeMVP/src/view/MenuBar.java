@@ -69,10 +69,12 @@ public class MenuBar extends Observable {
 				propLoadFileDialog.setFilterExtensions(new String[] { "*.xml", "*.*" });
 
 				propLoadFileDialog.open();
+				if (propLoadFileDialog.getFileName() != ""){
 				setChanged();
 				notifyObservers(
 						"load_XML " + propLoadFileDialog.getFilterPath() + "\\" + propLoadFileDialog.getFileName());
 				notifyLoadingSuccess();
+				}
 			}
 
 			@Override
