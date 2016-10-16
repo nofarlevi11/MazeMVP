@@ -86,8 +86,8 @@ public class MyView extends Observable implements View, Observer {
 	}
 
 	/**
-	 * <h1>Start
-	 * <h1/>The Start Method - starting the program by the CLI class
+	 * <h1>Start</h1>
+	 * The Start Method - starting the program by the CLI class
 	 */
 	@Override
 	public void start() {
