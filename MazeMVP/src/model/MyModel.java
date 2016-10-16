@@ -285,7 +285,7 @@ public class MyModel extends Observable implements Model {
 		}
 		try {
 			double sizeByteArray = fileIns.length();
-			b = new byte[(int) sizeByteArray];
+			b = new byte[(int) fileIns.length()*6];
 			in.read(b);
 		} catch (IOException e) {
 			// if any error occurs

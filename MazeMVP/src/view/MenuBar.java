@@ -101,6 +101,24 @@ public class MenuBar extends Observable {
 				// TODO Auto-generated method stub
 			}
 		});
+		
+		
+		MenuItem loadMemItem = new MenuItem(fileMenu, SWT.PUSH); //item for load  from memory
+		loadMemItem.setText("load from memory");
+		loadMemItem.addSelectionListener(new SelectionListener() { 
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				if (isSure()) {
+					setChanged();
+					notifyObservers("exit");
+				}
+			}
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+			}
+		});
 	}
 
 	/**

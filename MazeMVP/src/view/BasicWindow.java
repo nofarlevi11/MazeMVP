@@ -38,7 +38,7 @@ public abstract class BasicWindow extends Observable implements Runnable {
 		
 		shell.open();
 		
-		//addZoomListener();
+		addZoomListener();
 		
 		// main event loop
 		while(!shell.isDisposed()){ // while window isn't closed
@@ -54,20 +54,20 @@ public abstract class BasicWindow extends Observable implements Runnable {
 		display.dispose(); // dispose OS components
 	}
 
-//	private void addZoomListener(){
-//		shell.addMouseWheelListener(new MouseWheelListener() {
-//			
-//			@Override
-//			public void mouseScrolled(MouseEvent e) {
-//				int wheelCount = e.count;
-//				if ((e.stateMask & SWT.CONTROL) == SWT.CONTROL) {
-//					if ((wheelCount < 0 && shell.getSize().x > 200 && shell.getSize().y > 200)
-//							|| (wheelCount > 0 && shell.getSize().x < 2000 && shell.getSize().y < 2000)) {
-//						shell.setSize(shell.getSize().x + wheelCount, shell.getSize().y + wheelCount);
-//					}
-//				}
-//				
-//			}
-//		});
-//	}
+	private void addZoomListener(){
+		shell.addMouseWheelListener(new MouseWheelListener() {
+			
+			@Override
+			public void mouseScrolled(MouseEvent e) {
+				int wheelCount = e.count;
+				if ((e.stateMask & SWT.CONTROL) == SWT.CONTROL) {
+					if ((wheelCount < 0 && shell.getSize().x > 200 && shell.getSize().y > 200)
+							|| (wheelCount > 0 && shell.getSize().x < 2000 && shell.getSize().y < 2000)) {
+						shell.setSize(shell.getSize().x + wheelCount, shell.getSize().y + wheelCount);
+					}
+				}
+				
+			}
+		});
+	}
 }

@@ -99,6 +99,8 @@ public class MazeDisplay extends Canvas {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
+				if (mazeDataDisplay ==null)
+					return ;
 				Position pos = character.getPosition();
 				ArrayList<Position> moves = maze.getPossibleMoves(pos);
 				switch (e.keyCode) {
